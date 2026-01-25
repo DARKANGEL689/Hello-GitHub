@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Day 4: Weather App</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f0f8ff; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: inline-block; }
+        h1 { color: #333; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; }
+        button:hover { background-color: #0056b3; }
+        #result { margin-top: 20px; font-size: 1.2em; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>☁️ Simple Weather App</h1>
+        <p>Select a city to check the temperature:</p>
+        
+        <select id="citySelect">
+            <option value="28.61,77.20">New Delhi</option>
+            <option value="19.07,72.87">Mumbai</option>
+            <option value="26.40,75.83">Banasthali (Jaipur Region)</option>
+            <option value="40.71,-74.00">New York</option>
+            <option value="51.50,-0.12">London</option>
+        </select>
+
+        <button onclick="getWeather()">Get Weather</button>
+
+        <div id="result">Waiting for input...</div>
+    </div>
+
+    <script>
+        async function getWeather() {
+            let selection = document.getElementById("citySelect").value;
+            let [lat, lon] = selection.split(",");
+
+            let url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+
+            document.getElementById("result").innerText = "Loading...";
+            
+            try {
+                let response = await fetch(url);
+                let data = await response.json();
+                
+                let temp = data.current_weather.temperature;
+                document.getElementById("result").innerText = `🌡️ Temperature: ${temp}°C`;
+            } catch (error) {
+                document.getElementById("result").innerText = "Error fetching data!";
+            }
+        }
+    </script>
+
+</body>
+</html>
