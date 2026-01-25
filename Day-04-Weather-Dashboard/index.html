@@ -28,6 +28,7 @@
         <button onclick="getWeather()">Get Weather</button>
 
         <div id="result">Waiting for input...</div>
+        <div id="wind" style="margin-top: 10px; color: #555;"></div>
     </div>
 
     <script>
@@ -45,6 +46,9 @@
                 
                 let temp = data.current_weather.temperature;
                 document.getElementById("result").innerText = `🌡️ Temperature: ${temp}°C`;
+                
+                let wind = data.current_weather.windspeed;
+                document.getElementById("wind").innerText = `💨 Wind Speed: ${wind} km/h`;
             } catch (error) {
                 document.getElementById("result").innerText = "Error fetching data!";
             }
