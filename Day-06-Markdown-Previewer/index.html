@@ -1,77 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Day 6: Markdown Previewer</title>
+    <title>Day 6: Markdown Previewer (Pro)</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            margin: 0; 
-            display: flex; 
-            height: 100vh; 
-        }
-        /* Split the screen into two equal halves */
-        .container { display: flex; width: 100%; height: 100%; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
         
-        /* Left Side: The Editor */
+        /* Toolbar Styling */
+        .toolbar {
+            background: #21252b;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #181a1f;
+        }
+        .toolbar h2 { margin: 0; font-size: 1.2em; }
+        .btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 10px;
+            font-size: 0.9em;
+        }
+        .btn-clear { background: #e06c75; }
+        .btn:hover { opacity: 0.9; }
+
+        /* Main Container */
+        .container { display: flex; flex: 1; width: 100%; }
+        
         textarea { 
-            width: 50%; 
-            height: 100%; 
-            padding: 20px; 
-            font-size: 16px; 
-            border: none; 
-            background: #282c34; 
-            color: #abb2bf; 
-            resize: none; 
-            outline: none;
+            width: 50%; height: 100%; padding: 20px; font-size: 16px; 
+            border: none; background: #282c34; color: #abb2bf; resize: none; outline: none; 
         }
-
-        /* Right Side: The Preview */
+        
         #preview { 
-            width: 50%; 
-            height: 100%; 
-            padding: 20px; 
-            background: #ffffff; 
-            overflow-y: auto; 
-            border-left: 2px solid #ddd;
+            width: 50%; height: 100%; padding: 20px; background: #ffffff; 
+            overflow-y: auto; border-left: 2px solid #ddd; 
         }
-
-        /* Styling for the markdown output */
-        h1, h2, h3 { color: #333; }
-        code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; }
-        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
     </style>
 </head>
 <body>
 
+    <div class="toolbar">
+        <h2>Markdown Editor</h2>
+        <div>
+            <button class="btn btn-clear" onclick="clearEditor()">Clear</button>
+            <button class="btn" onclick="downloadFile()">Download .md</button>
+        </div>
+    </div>
+
     <div class="container">
         <textarea id="editor" oninput="updatePreview()">
-# Hello World!
-## This is a Sub-heading
-Type some **bold** text or *italic* text here.
+# Welcome to Day 6!
+Try typing some **Markdown** here.
 
-- Item 1
-- Item 2
-- [Link to Google](https://google.com)
+## Features Added:
+1. Live Preview
+2. Clear Button
+3. Download Support
         </textarea>
-        
         <div id="preview"></div>
     </div>
 
     <script>
-        // 1. Function to run whenever you type
         function updatePreview() {
-            // Get the text from the left side
             let markdownText = document.getElementById("editor").value;
-            
-            // Convert it to HTML using the library
-            let htmlContent = marked.parse(markdownText);
-            
-            // Show it on the right side
-            document.getElementById("preview").innerHTML = htmlContent;
+            document.getElementById("preview").innerHTML = marked.parse(markdownText);
         }
 
-        // 2. Run it once when page loads
+        function clearEditor() {
+            if(confirm("Are you sure you want to clear everything?")) {
+                document.getElementById("editor").value = "";
+                updatePreview();
+            }
+        }
+
+        function downloadFile() {
+            let text = document.getElementById("editor").value;
+            let blob = new Blob([text], { type: "text/markdown" });
+            let anchor = document.createElement("a");
+            anchor.href = window.URL.createObjectURL(blob);
+            anchor.download = "readme.md";
+            anchor.click();
+        }
+
         updatePreview();
     </script>
 
