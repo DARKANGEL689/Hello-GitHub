@@ -18,6 +18,18 @@
         .btn { background: #e67e22; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; width: 100%; border-radius: 5px; }
         .btn:hover { background: #d35400; }
         .btn-copy { position: absolute; top: 5px; right: 5px; background: #27ae60; color: white; border: none; cursor: pointer; padding: 5px 10px; font-size: 12px; border-radius: 3px; }
+
+        .strength-bar {
+           height: 10px;
+           width: 100%;
+           background: #ddd;
+           margin-top: 10px;
+           border-radius: 5px;
+           transition: 0.3s;
+}
+        .strength-weak { background: #e74c3c; width: 33%; }    
+        .strength-medium { background: #f1c40f; width: 66%; }  
+        .strength-strong { background: #2ecc71; width: 100%; }  
     </style>
 </head>
 <body>
@@ -29,7 +41,7 @@
             <span id="result">CLICK GENERATE</span>
             <button class="btn-copy" onclick="copyPassword()">Copy</button>
         </div>
-
+        <div id="strength-bar" class="strength-bar"></div>
         <div class="settings">
             <div class="setting">
                 <label>Length</label>
@@ -78,6 +90,8 @@
             }
 
             document.getElementById("result").innerText = password;
+            
+            updateStrength(length, hasUpper, hasNumber, hasSymbol);
         }
 
         function copyPassword() {
@@ -90,6 +104,26 @@
                 alert("Password copied to clipboard!");
             });
         }
+        function updateStrength(length, hasUpper, hasNumber, hasSymbol) {
+    const bar = document.getElementById("strength-bar");
+    let score = 0;
+
+    if (length > 8) score++;
+    if (length > 12) score++;
+    if (hasUpper) score++;
+    if (hasNumber) score++;
+    if (hasSymbol) score++;
+
+    bar.className = "strength-bar";
+
+    if (score < 3) {
+        bar.classList.add("strength-weak");
+    } else if (score < 5) {
+        bar.classList.add("strength-medium");
+    } else {
+        bar.classList.add("strength-strong");
+    }
+}
     </script>
 
 </body>
