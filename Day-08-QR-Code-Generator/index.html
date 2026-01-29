@@ -64,6 +64,14 @@
             <label>Pick Color: </label>
             <input type="color" id="qr-color" value="#000000">
         </div>
+        <div style="margin-bottom: 15px; text-align: left;">
+    <label>Size: </label>
+    <select id="qr-size" style="padding: 5px; border-radius: 4px;">
+        <option value="150x150">Small (150px)</option>
+        <option value="300x300" selected>Medium (300px)</option>
+        <option value="500x500">Large (500px)</option>
+    </select>
+         </div>
         <button onclick="generateQR()">Generate QR Code</button>
         
         <div id="qr-box">
@@ -72,18 +80,21 @@
     </div>
 
     <script>
-       function generateQR() {
+      function generateQR() {
     let text = document.getElementById("qr-text").value;
     let colorInput = document.getElementById("qr-color").value;
+    let sizeInput = document.getElementById("qr-size").value;
     let qrBox = document.getElementById("qr-box");
     let qrImage = document.getElementById("qr-image");
+    let downloadLink = document.getElementById("download-link"); 
 
     if (text.length > 0) {
         let colorCode = colorInput.substring(1); 
-
-        let apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(text)}&color=${colorCode}`;
+        let apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${sizeInput}&data=${encodeURIComponent(text)}&color=${colorCode}`;
         
         qrImage.src = apiUrl;
+        downloadLink.href = apiUrl; 
+        
         qrBox.style.display = "block";
     } else {
         alert("Please enter some text first!");
