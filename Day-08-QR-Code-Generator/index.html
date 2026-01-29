@@ -43,12 +43,11 @@
         }
         button:hover { background: #2980b9; }
         
-        /* The Image Box */
         #qr-box { 
             margin-top: 20px; 
             padding: 10px; 
             border: 1px dashed #ccc; 
-            display: none; /* Hidden until we generate */
+            display: none; 
             border-radius: 5px;
         }
         img { width: 100%; }
@@ -61,6 +60,10 @@
         <p>Type a URL or text below:</p>
         
         <input type="text" id="qr-text" placeholder="e.g., google.com">
+        <div style="margin-bottom: 15px; text-align: left;">
+            <label>Pick Color: </label>
+            <input type="color" id="qr-color" value="#000000">
+        </div>
         <button onclick="generateQR()">Generate QR Code</button>
         
         <div id="qr-box">
@@ -69,25 +72,24 @@
     </div>
 
     <script>
-        function generateQR() {
-            let text = document.getElementById("qr-text").value;
-            let qrBox = document.getElementById("qr-box");
-            let qrImage = document.getElementById("qr-image");
+       function generateQR() {
+    let text = document.getElementById("qr-text").value;
+    let colorInput = document.getElementById("qr-color").value;
+    let qrBox = document.getElementById("qr-box");
+    let qrImage = document.getElementById("qr-image");
 
-            if (text.length > 0) {
-                // 1. Use the free API to create the image URL
-                let apiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(text);
-                
-                // 2. Set the image source
-                qrImage.src = apiUrl;
-                
-                // 3. Show the box
-                qrBox.style.display = "block";
-            } else {
-                alert("Please enter some text first!");
-                document.getElementById("qr-text").focus();
-            }
-        }
+    if (text.length > 0) {
+        let colorCode = colorInput.substring(1); 
+
+        let apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(text)}&color=${colorCode}`;
+        
+        qrImage.src = apiUrl;
+        qrBox.style.display = "block";
+    } else {
+        alert("Please enter some text first!");
+        document.getElementById("qr-text").focus();
+    }
+}
     </script>
 
 </body>
