@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Day 8: QR Code Generator</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #2c3e50; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
+            text-align: center; 
+            width: 300px; 
+        }
+        h2 { color: #333; margin-top: 0; }
+        p { color: #666; font-size: 0.9em; }
+        
+        input { 
+            width: 90%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            margin-bottom: 15px; 
+        }
+        
+        button { 
+            background: #3498db; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            cursor: pointer; 
+            border-radius: 5px; 
+            width: 100%; 
+            font-size: 16px; 
+        }
+        button:hover { background: #2980b9; }
+        
+        /* The Image Box */
+        #qr-box { 
+            margin-top: 20px; 
+            padding: 10px; 
+            border: 1px dashed #ccc; 
+            display: none; /* Hidden until we generate */
+            border-radius: 5px;
+        }
+        img { width: 100%; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>📱 QR Generator</h2>
+        <p>Type a URL or text below:</p>
+        
+        <input type="text" id="qr-text" placeholder="e.g., google.com">
+        <button onclick="generateQR()">Generate QR Code</button>
+        
+        <div id="qr-box">
+            <img id="qr-image" src="" alt="QR Code">
+        </div>
+    </div>
+
+    <script>
+        function generateQR() {
+            let text = document.getElementById("qr-text").value;
+            let qrBox = document.getElementById("qr-box");
+            let qrImage = document.getElementById("qr-image");
+
+            if (text.length > 0) {
+                // 1. Use the free API to create the image URL
+                let apiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(text);
+                
+                // 2. Set the image source
+                qrImage.src = apiUrl;
+                
+                // 3. Show the box
+                qrBox.style.display = "block";
+            } else {
+                alert("Please enter some text first!");
+                document.getElementById("qr-text").focus();
+            }
+        }
+    </script>
+
+</body>
+</html>
