@@ -38,6 +38,11 @@
     </style>
 </head>
 <body>
+    <div style="position: absolute; top: 20px; right: 20px;">
+    <button onclick="changeColor('#00ffcc')" style="width: 30px; height: 30px; background: #00ffcc; border: none; border-radius: 50%; cursor: pointer;"></button>
+    <button onclick="changeColor('#ff00ff')" style="width: 30px; height: 30px; background: #ff00ff; border: none; border-radius: 50%; cursor: pointer;"></button>
+    <button onclick="changeColor('#00ccff')" style="width: 30px; height: 30px; background: #00ccff; border: none; border-radius: 50%; cursor: pointer;"></button>
+</div>
 
     <div class="stopwatch-container" style="margin-top: 30px; text-align: center;">
     <h2 style="color: white; text-shadow: 0 0 5px white;">⏱ Stopwatch</h2>
@@ -113,8 +118,14 @@
             elapsedSeconds = 0;
             document.getElementById('stopwatch-display').innerText = "00:00:00";
         }
+        function changeColor(color) {
+            document.body.style.color = color;
+            document.querySelector('.clock-container').style.borderColor = color;
+            document.querySelector('.clock-container').style.boxShadow = `0 0 20px ${color}, inset 0 0 20px ${color}`;
+            document.getElementById('time').style.textShadow = `0 0 10px ${color}`;
+}
 
-       
+        
         updateClock();
 
         setInterval(updateClock, 1000);
