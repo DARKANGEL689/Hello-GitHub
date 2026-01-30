@@ -39,9 +39,13 @@
 </head>
 <body>
 
-    <div class="clock-container">
-        <div id="time">00:00:00</div>
-        <div id="date">Loading Date...</div>
+    <div class="stopwatch-container" style="margin-top: 30px; text-align: center;">
+    <h2 style="color: white; text-shadow: 0 0 5px white;">⏱ Stopwatch</h2>
+    <div id="stopwatch-display" style="font-size: 40px; color: white; margin-bottom: 10px;">00:00:00</div>
+
+    <button onclick="startStopwatch()" style="padding: 10px 20px; background: #00ffcc; border: none; font-weight: bold; cursor: pointer;">START</button>
+    <button onclick="stopStopwatch()" style="padding: 10px 20px; background: #ff0055; border: none; font-weight: bold; color: white; cursor: pointer;">STOP</button>
+    <button onclick="resetStopwatch()" style="padding: 10px 20px; background: #ffff00; border: none; font-weight: bold; cursor: pointer;">RESET</button>
     </div>
 
     <script>
