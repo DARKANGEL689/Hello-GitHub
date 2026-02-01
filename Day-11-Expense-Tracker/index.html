@@ -44,6 +44,7 @@
 
         <ul id="list">
             </ul>
+         <button onclick="resetApp()" style="background: #d63031; margin-top: 20px;">⚠️ Reset All Data</button>
     </div>
 
     <script>
@@ -101,6 +102,13 @@
             });
 
             totalDisplay.innerText = "₹" + total;
+        }
+        function resetApp() {
+            if(confirm("Are you sure? This will delete all expenses!")) {
+               expenses = [];
+               localStorage.removeItem("expenses");
+               saveAndRender();
+            }
         }
     </script>
 
