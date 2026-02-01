@@ -29,7 +29,11 @@
 
     <div class="container">
         <h2>💰 Expense Tracker</h2>
-        
+        <div style="text-align: center; margin-bottom: 20px; padding: 10px; background: #e0f7fa; border-radius: 8px;">
+            <input type="number" id="budgetInput" placeholder="Set Monthly Budget" style="width: 60%; padding: 8px;">
+            <button onclick="setBudget()" style="width: 30%; background: #0984e3; padding: 8px;">Set</button>
+            <p id="budgetStatus" style="margin: 10px 0 0; font-weight: bold; color: #555;">Budget: ₹0</p>
+        </div>
         <div class="balance-box">
             <p>Total Spent</p>
             <h1 id="total">₹0</h1>
@@ -48,69 +52,117 @@
     </div>
 
     <script>
-        let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+    let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+    let budget = localStorage.getItem("budget") || 0;
+    let myChart = null;
+
+    updateBudgetDisplay();
+    renderExpenses();
+    renderChart();
+
+    function setBudget() {
+        let val = document.getElementById("budgetInput").value;
+        if (val === "") return alert("Please enter a budget amount");
+        
+        budget = parseInt(val);
+        localStorage.setItem("budget", budget);
+        updateBudgetDisplay();
+        renderExpenses(); 
+    }
+
+    function updateBudgetDisplay() {
+        document.getElementById("budgetStatus").innerText = `Budget: ₹${budget}`;
+    }
+
+    function addExpense() {
+        let desc = document.getElementById("desc").value;
+        let amount = document.getElementById("amount").value;
+
+        if(desc === "" || amount === "") return alert("Please fill both fields!");
+
+        let expense = {
+            id: Date.now(),
+            desc: desc,
+            amount: parseInt(amount)
+        };
+
+        expenses.push(expense);
+        saveAndRender();
+        
+        document.getElementById("desc").value = "";
+        document.getElementById("amount").value = "";
+    }
+
+    function deleteExpense(id) {
+        expenses = expenses.filter(expense => expense.id !== id);
+        saveAndRender();
+    }
+
+    function resetApp() {
+        if(confirm("Are you sure? This will delete all expenses!")) {
+            expenses = [];
+            localStorage.removeItem("expenses");
+            saveAndRender();
+        }
+    }
+
+    function saveAndRender() {
+        localStorage.setItem("expenses", JSON.stringify(expenses));
         renderExpenses();
+        renderChart();
+    }
 
-        function addExpense() {
-            let desc = document.getElementById("desc").value;
-            let amount = document.getElementById("amount").value;
+    function renderExpenses() {
+        let list = document.getElementById("list");
+        let totalDisplay = document.getElementById("total");
+        let balanceBox = document.querySelector(".balance-box");
+        let total = 0;
 
-            if(desc === "" || amount === "") return alert("Please fill both fields!");
+        list.innerHTML = "";
 
-            let expense = {
-                id: Date.now(),
-                desc: desc,
-                amount: parseInt(amount)
-            };
+        expenses.forEach(expense => {
+            total += expense.amount;
+            let li = document.createElement("li");
+            li.innerHTML = `
+                ${expense.desc}
+                <div>
+                    <span>-₹${expense.amount}</span>
+                    <button onclick="deleteExpense(${expense.id})" style="background:transparent; color:#bbb; border:none; margin-left:10px; cursor:pointer;">❌</button>
+                </div>
+            `;
+            list.appendChild(li);
+        });
 
-            expenses.push(expense);
-            saveAndRender();
-            
-            document.getElementById("desc").value = "";
-            document.getElementById("amount").value = "";
+        totalDisplay.innerText = "₹" + total;
+
+        if (budget > 0 && total > budget) {
+            balanceBox.style.background = "#d63031"; 
+            totalDisplay.innerText += " (Over Budget!)";
+        } else {
+            balanceBox.style.background = "#6c5ce7";
         }
+    }
 
-        function deleteExpense(id) {
-            expenses = expenses.filter(expense => expense.id !== id);
-            saveAndRender();
-        }
+    function renderChart() {
+        const ctx = document.getElementById('expenseChart').getContext('2d');
+        let labels = expenses.map(e => e.desc);
+        let data = expenses.map(e => e.amount);
 
-        function saveAndRender() {
-            localStorage.setItem("expenses", JSON.stringify(expenses));
-            renderExpenses();
-        }
+        if (myChart) myChart.destroy();
 
-        function renderExpenses() {
-            let list = document.getElementById("list");
-            let totalDisplay = document.getElementById("total");
-            let total = 0;
-
-            list.innerHTML = "";
-
-            expenses.forEach(expense => {
-                total += expense.amount;
-                
-                let li = document.createElement("li");
-                li.innerHTML = `
-                    ${expense.desc}
-                    <div>
-                        <span>-₹${expense.amount}</span>
-                        <button onclick="deleteExpense(${expense.id})" style="background:transparent; color:#bbb; width:auto; margin-left:10px;">❌</button>
-                    </div>
-                `;
-                list.appendChild(li);
-            });
-
-            totalDisplay.innerText = "₹" + total;
-        }
-        function resetApp() {
-            if(confirm("Are you sure? This will delete all expenses!")) {
-               expenses = [];
-               localStorage.removeItem("expenses");
-               saveAndRender();
+        myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: ['#ff7675', '#74b9ff', '#55efc4', '#a29bfe', '#fdcb6e', '#e17055'],
+                    borderWidth: 1
+                }]
             }
-        }
-    </script>
+        });
+    }
+ </script>
 
 </body>
 </html>
