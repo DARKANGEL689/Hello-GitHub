@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Day 11: Expense Tracker</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding-top: 50px; }
+        .container { background: white; width: 400px; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        
+        .balance-box { background: #6c5ce7; color: white; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
+        .balance-box h1 { margin: 0; font-size: 2.5em; }
+        .balance-box p { margin: 0; opacity: 0.8; }
+
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { padding: 12px; border: 1px solid #ddd; border-radius: 5px; outline: none; }
+        #desc { flex: 2; }
+        #amount { flex: 1; }
+        
+        button { width: 100%; padding: 12px; background: #00b894; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #00a884; }
+
+        ul { list-style: none; padding: 0; margin-top: 20px; }
+        li { background: #fff; border-bottom: 1px solid #eee; padding: 10px; display: flex; justify-content: space-between; align-items: center; }
+        li span { font-weight: bold; color: #d63031; }
+        li:first-child { border-top: 1px solid #eee; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>💰 Expense Tracker</h2>
+        
+        <div class="balance-box">
+            <p>Total Spent</p>
+            <h1 id="total">₹0</h1>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="desc" placeholder="Expense Name (e.g. Coffee)">
+            <input type="number" id="amount" placeholder="Amount">
+        </div>
+        
+        <button onclick="addExpense()">Add Expense</button>
+
+        <ul id="list">
+            </ul>
+    </div>
+
+    <script>
+        let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+        renderExpenses();
+
+        function addExpense() {
+            let desc = document.getElementById("desc").value;
+            let amount = document.getElementById("amount").value;
+
+            if(desc === "" || amount === "") return alert("Please fill both fields!");
+
+            let expense = {
+                id: Date.now(),
+                desc: desc,
+                amount: parseInt(amount)
+            };
+
+            expenses.push(expense);
+            saveAndRender();
+            
+            document.getElementById("desc").value = "";
+            document.getElementById("amount").value = "";
+        }
+
+        function deleteExpense(id) {
+            expenses = expenses.filter(expense => expense.id !== id);
+            saveAndRender();
+        }
+
+        function saveAndRender() {
+            localStorage.setItem("expenses", JSON.stringify(expenses));
+            renderExpenses();
+        }
+
+        function renderExpenses() {
+            let list = document.getElementById("list");
+            let totalDisplay = document.getElementById("total");
+            let total = 0;
+
+            list.innerHTML = "";
+
+            expenses.forEach(expense => {
+                total += expense.amount;
+                
+                let li = document.createElement("li");
+                li.innerHTML = `
+                    ${expense.desc}
+                    <div>
+                        <span>-₹${expense.amount}</span>
+                        <button onclick="deleteExpense(${expense.id})" style="background:transparent; color:#bbb; width:auto; margin-left:10px;">❌</button>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+
+            totalDisplay.innerText = "₹" + total;
+        }
+    </script>
+
+</body>
+</html>
