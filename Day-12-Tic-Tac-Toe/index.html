@@ -97,6 +97,7 @@
     </div>
 
     <button onclick="restartGame()">Restart Game</button>
+    <button onclick="resetScores()" style="background: #e67e22; margin-left: 10px;">Reset Scores</button>
     <audio id="clickSound" src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"></audio>
     <script>
         const statusDisplay = document.getElementById('status');
@@ -193,6 +194,15 @@
                 cell.classList.remove('x', 'o');
                 cell.style.backgroundColor = "white"; 
             });
+        }
+        function resetScores() {
+            xWins = 0;
+            oWins = 0;
+            draws = 0;
+            document.getElementById("scoreX").innerText = "0";
+            document.getElementById("scoreO").innerText = "0";
+            document.getElementById("scoreDraw").innerText = "0";
+            restartGame();
         }
 
         cells.forEach(cell => cell.addEventListener('click', handleCellClick));
