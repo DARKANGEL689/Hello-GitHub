@@ -143,6 +143,13 @@
                 }
                 if (a === b && b === c) {
                     roundWon = true;
+                    let val0 = winCondition[0];
+                    let val1 = winCondition[1];
+                    let val2 = winCondition[2];
+
+                    document.querySelector(`[data-index='${val0}']`).style.backgroundColor = "#27ae60";
+                    document.querySelector(`[data-index='${val1}']`).style.backgroundColor = "#27ae60";
+                    document.querySelector(`[data-index='${val2}']`).style.backgroundColor = "#27ae60";
                     break;
                 }
             }
@@ -180,6 +187,7 @@
             cells.forEach(cell => {
                 cell.innerText = "";
                 cell.classList.remove('x', 'o');
+                cell.style.backgroundColor = "white"; 
             });
         }
 
