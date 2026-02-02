@@ -59,6 +59,10 @@
             cursor: pointer;
         }
         button:hover { background: #2ecc71; }
+        .cell:active {
+            transform: scale(0.95);
+            transition: transform 0.1s;
+        }
     </style>
 </head>
 <body>
@@ -93,7 +97,7 @@
     </div>
 
     <button onclick="restartGame()">Restart Game</button>
-
+    <audio id="clickSound" src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"></audio>
     <script>
         const statusDisplay = document.getElementById('status');
         const cells = document.querySelectorAll('.cell');
