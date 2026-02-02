@@ -101,7 +101,9 @@
         let currentPlayer = "X";
         let gameState = ["", "", "", "", "", "", "", "", ""]; 
         let gameActive = true;
-
+        let xWins = 0;
+        let oWins = 0;
+        let draws = 0;
         const winningConditions = [
             [0, 1, 2],
             [3, 4, 5], 
@@ -148,12 +150,21 @@
             if (roundWon) {
                 statusDisplay.innerText = `🎉 Player ${currentPlayer} Wins!`;
                 gameActive = false;
+                if (currentPlayer === "X") {
+                    xWins++;
+                    document.getElementById("scoreX").innerText = xWins;
+                } else {
+                    oWins++;
+                    document.getElementById("scoreO").innerText = oWins;
+                }
                 return;
             }
 
             if (!gameState.includes("")) {
                 statusDisplay.innerText = "Draw! 😐";
                 gameActive = false;
+                draws++;
+                document.getElementById("scoreDraw").innerText = draws;
                 return;
             }
 
