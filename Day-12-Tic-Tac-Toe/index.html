@@ -68,6 +68,11 @@
 <body>
 
     <h1>❌ Tic Tac Toe ⭕</h1>
+    <div style="margin-bottom: 15px;">
+    <input type="text" id="playerXName" placeholder="Player X Name" style="padding: 5px;">
+    <span style="margin: 0 10px;">VS</span>
+    <input type="text" id="playerOName" placeholder="Player O Name" style="padding: 5px;">
+    </div>
     <div class="scoreboard" style="display: flex; gap: 20px; margin-bottom: 20px;">
         <div style="background: #e74c3c; padding: 10px 20px; border-radius: 5px; text-align: center;">
             <span style="display: block; font-size: 0.8em;">X Wins</span>
@@ -129,7 +134,7 @@
 
             gameState[clickedCellIndex] = currentPlayer;
             clickedCell.innerText = currentPlayer;
-            clickedCell.classList.add(currentPlayer.toLowerCase()); // Adds class 'x' or 'o' for color
+            clickedCell.classList.add(currentPlayer.toLowerCase()); 
 
             checkResult();
         }
@@ -160,7 +165,11 @@
             }
 
             if (roundWon) {
-                statusDisplay.innerText = `🎉 Player ${currentPlayer} Wins!`;
+                let pX = document.getElementById("playerXName").value || "X";
+                let pO = document.getElementById("playerOName").value || "O";
+                let winnerName = currentPlayer === "X" ? pX : pO;
+
+                statusDisplay.innerText = `🎉 ${winnerName} Wins!`;
                 gameActive = false;
                 if (currentPlayer === "X") {
                     xWins++;
