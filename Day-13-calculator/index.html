@@ -80,6 +80,7 @@
 
     <div class="calculator">
         <div style="flex: 1;"></div>
+        <button onclick="toggleTheme()" style="margin-bottom: 10px; width: 100%; padding: 5px; background: #6c5ce7; color: white;">Toggle Theme 🌙</button>
              <input type="text" id="display" readonly>
 
         <div class="keys">
@@ -179,7 +180,21 @@
         }    
         function clearHistory() {
             document.getElementById("history-list").innerHTML = "";
-        }                                            
+        }    
+                  let isDark = false;
+        function toggleTheme() {
+            isDark = !isDark;
+          if (isDark) {
+                document.body.style.background = "#2d3436";
+                document.querySelector(".calculator").style.background = "black";
+                document.querySelector(".history h3").style.color = "white";
+                document.querySelector(".history").style.borderColor = "#444";
+            } else {
+                document.body.style.background = "#dfe6e9";
+                document.querySelector(".calculator").style.background = "#2d3436";
+                document.querySelector(".history h3").style.color = "#2d3436"; 
+           }
+        }                              
     </script>
 
 </body>
