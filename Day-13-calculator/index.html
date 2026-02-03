@@ -115,6 +115,13 @@
 
      <script>
         const display = document.getElementById("display");
+        function addToHistory(expr, res) {
+            const historyList = document.getElementById("history-list");
+            const entry = document.createElement("p");
+            entry.innerHTML = `<strong>${expr}</strong> = ${res}`;
+
+            historyList.prepend(entry);
+        }
 
         function appendToDisplay(input) {
             display.value += input;
@@ -130,8 +137,11 @@
 
         function calculate() {
             try {
-               
+               const expression = display.value;
+               const result = eval(expression);
+
                 display.value = eval(display.value);
+                addToHistory(expression, result); 
             } catch (error) {
                 display.value = "Error";
                 setTimeout(clearDisplay, 1000); 
