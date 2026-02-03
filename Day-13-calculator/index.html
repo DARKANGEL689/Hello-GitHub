@@ -109,6 +109,7 @@
         </div>
         <div class="history">
                 <h3>History</h3>
+                <button onclick="clearHistory()" style="padding: 5px; font-size: 0.8em; background: #d63031; color: white; width: 100%;">Clear</button>
                 <div id="history-list"></div>
              </div>
      </div>
@@ -175,7 +176,10 @@
             } catch {
                 display.value = "Error";
             }
-        }                                                
+        }    
+        function clearHistory() {
+            document.getElementById("history-list").innerHTML = "";
+        }                                            
     </script>
 
 </body>
