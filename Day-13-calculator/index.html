@@ -75,7 +75,8 @@
             <button onclick="appendToDisplay('/')" class="btn-orange">÷</button>
             <button onclick="appendToDisplay('*')" class="btn-orange">×</button>
             <button onclick="deleteLast()" class="btn-orange">⌫</button>
-
+            <button onclick="calculateSquare()" class="btn-grey">x²</button>
+            <button onclick="calculateRoot()" class="btn-grey">√</button>
             <button onclick="appendToDisplay('7')" class="btn-dark">7</button>
             <button onclick="appendToDisplay('8')" class="btn-dark">8</button>
             <button onclick="appendToDisplay('9')" class="btn-dark">9</button>
@@ -134,6 +135,21 @@
                 clearDisplay();
             }
         });
+        function calculateSquare() {
+            try {
+                display.value = eval(display.value) ** 2;
+            } catch {
+                 display.value = "Error";
+            }
+        }
+
+        function calculateRoot() {
+            try {
+                display.value = Math.sqrt(eval(display.value));
+            } catch {
+                display.value = "Error";
+            }
+        }                                                
     </script>
 
 </body>
