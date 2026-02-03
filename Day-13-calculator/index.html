@@ -19,7 +19,8 @@
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            width: 300px;
+            width: 500px;
+            display: flex; gap: 20px;
         }
 
         #display {
@@ -41,6 +42,16 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
         }
+        .history {
+            width: 180px;
+            border-left: 1px solid #636e72;
+            padding-left: 20px;
+            color: #636e72;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+.history h3 { margin-top: 0; color: #2d3436; }
+.history p { border-bottom: 1px solid #ccc; padding: 5px; font-size: 0.9em; }
 
         button {
             padding: 20px;
@@ -68,7 +79,8 @@
 <body>
 
     <div class="calculator">
-        <input type="text" id="display" readonly>
+        <div style="flex: 1;"></div>
+             <input type="text" id="display" readonly>
 
         <div class="keys">
             <button onclick="clearDisplay()" class="btn-grey">C</button>
@@ -95,9 +107,13 @@
             <button onclick="appendToDisplay('0')" class="btn-dark" style="grid-column: span 2;">0</button>
             <button onclick="appendToDisplay('.')" class="btn-dark">.</button>
         </div>
-    </div>
+        <div class="history">
+                <h3>History</h3>
+                <div id="history-list"></div>
+             </div>
+     </div>
 
-    <script>
+     <script>
         const display = document.getElementById("display");
 
         function appendToDisplay(input) {
