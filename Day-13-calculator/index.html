@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Day 13: Calculator</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #dfe6e9; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+
+        .calculator {
+            background: #2d3436;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            width: 300px;
+        }
+
+        #display {
+            width: 100%;
+            height: 60px;
+            background: #636e72;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 2.5em;
+            text-align: right;
+            padding: 10px;
+            box-sizing: border-box; 
+            margin-bottom: 20px;
+        }
+
+        .keys {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.1s;
+        }
+
+        button:hover { opacity: 0.8; }
+        button:active { transform: scale(0.95); }
+
+        .btn-grey { background: #b2bec3; color: #2d3436; }
+        .btn-orange { background: #e17055; color: white; }
+        .btn-dark { background: #636e72; color: white; }
+        .btn-equal { 
+            background: #00b894; 
+            color: white; 
+            grid-column: span 2; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <input type="text" id="display" readonly>
+
+        <div class="keys">
+            <button onclick="clearDisplay()" class="btn-grey">C</button>
+            <button onclick="appendToDisplay('/')" class="btn-orange">÷</button>
+            <button onclick="appendToDisplay('*')" class="btn-orange">×</button>
+            <button onclick="deleteLast()" class="btn-orange">⌫</button>
+
+            <button onclick="appendToDisplay('7')" class="btn-dark">7</button>
+            <button onclick="appendToDisplay('8')" class="btn-dark">8</button>
+            <button onclick="appendToDisplay('9')" class="btn-dark">9</button>
+            <button onclick="appendToDisplay('-')" class="btn-orange">-</button>
+
+            <button onclick="appendToDisplay('4')" class="btn-dark">4</button>
+            <button onclick="appendToDisplay('5')" class="btn-dark">5</button>
+            <button onclick="appendToDisplay('6')" class="btn-dark">6</button>
+            <button onclick="appendToDisplay('+')" class="btn-orange">+</button>
+
+            <button onclick="appendToDisplay('1')" class="btn-dark">1</button>
+            <button onclick="appendToDisplay('2')" class="btn-dark">2</button>
+            <button onclick="appendToDisplay('3')" class="btn-dark">3</button>
+            <button onclick="calculate()" class="btn-equal">=</button>
+
+            <button onclick="appendToDisplay('0')" class="btn-dark" style="grid-column: span 2;">0</button>
+            <button onclick="appendToDisplay('.')" class="btn-dark">.</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById("display");
+
+        function appendToDisplay(input) {
+            display.value += input;
+        }
+
+        function clearDisplay() {
+            display.value = "";
+        }
+
+        function deleteLast() {
+            display.value = display.value.slice(0, -1);
+        }
+
+        function calculate() {
+            try {
+               
+                display.value = eval(display.value);
+            } catch (error) {
+                display.value = "Error";
+                setTimeout(clearDisplay, 1000); 
+            }
+        }
+    </script>
+
+</body>
+</html>
