@@ -112,6 +112,7 @@
         const content = document.getElementById('quote-content');
 
         async function getQuote() {
+            setRandomColor();
             showLoadingSpinner();
             
             try {
@@ -158,6 +159,16 @@
             const speech = new SpeechSynthesisUtterance();
             speech.text = `${quoteText.innerText} by ${authorText.innerText.replace("-", "")}`;
             window.speechSynthesis.speak(speech);
+        }
+        function setRandomColor() {
+            const colors = [
+                "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", 
+                "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", 
+                "linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)", 
+                "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"  
+            ];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.background = randomColor;
         }
 
         getQuote();
