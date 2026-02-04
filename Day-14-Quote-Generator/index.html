@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Day 14: Quote Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 500px;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 { margin-top: 0; color: #764ba2; font-size: 1.5em; text-transform: uppercase; letter-spacing: 2px; }
+
+        .quote-box {
+            margin: 30px 0;
+            min-height: 100px; 
+        }
+
+        .quote-text {
+            font-size: 1.4em;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .author {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #666;
+            text-align: right;
+            font-size: 1.1em;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: white;
+        }
+        
+        button:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        .btn-new { background: #764ba2; }
+        .btn-tweet { background: #1da1f2; }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #764ba2;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Daily Inspiration</h1>
+
+        <div class="loader" id="loader"></div>
+
+        <div class="quote-box" id="quote-content">
+            <p class="quote-text" id="quote">"Press the button to get inspired!"</p>
+            <p class="author" id="author">- You</p>
+        </div>
+
+        <div class="buttons">
+            <button class="btn-tweet" onclick="tweetQuote()">🐦 Tweet</button>
+            <button class="btn-new" onclick="getQuote()">New Quote</button>
+        </div>
+    </div>
+
+    <script>
+        const quoteText = document.getElementById('quote');
+        const authorText = document.getElementById('author');
+        const loader = document.getElementById('loader');
+        const content = document.getElementById('quote-content');
+
+        async function getQuote() {
+            showLoadingSpinner();
+            
+            try {
+                const response = await fetch('https://dummyjson.com/quotes/random');
+                
+                const data = await response.json();
+                
+                quoteText.innerText = `"${data.quote}"`;
+                authorText.innerText = `- ${data.author}`;
+            } catch (error) {
+                quoteText.innerText = "Oops! An error happened.";
+                authorText.innerText = "";
+                console.error(error);
+            }
+            
+            hideLoadingSpinner();
+        }
+
+        function tweetQuote() {
+            const quote = quoteText.innerText;
+            const author = authorText.innerText;
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${quote} ${author}`;
+            window.open(twitterUrl, '_blank');
+        }
+
+        function showLoadingSpinner() {
+            loader.style.display = 'block';
+            content.style.visibility = 'hidden';
+        }
+
+        function hideLoadingSpinner() {
+            loader.style.display = 'none';
+            content.style.visibility = 'visible';
+        }
+
+        getQuote();
+    </script>
+
+</body>
+</html>
