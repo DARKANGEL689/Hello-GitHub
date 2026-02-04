@@ -100,6 +100,7 @@
             <button class="btn-tweet" onclick="tweetQuote()">🐦 Tweet</button>
             <button class="btn-new" onclick="getQuote()">New Quote</button>
             <button onclick="copyQuote()" style="background: #e67e22;">📋 Copy</button>
+            <button onclick="speakQuote()" style="background: none; color: #333; padding: 5px; margin-top: 10px;">🔊 Listen</button>
         </div>
     </div>
 
@@ -144,10 +145,17 @@
             loader.style.display = 'none';
             content.style.visibility = 'visible';
         }
+
         function copyQuote() {
             const text = `${quoteText.innerText} ${authorText.innerText}`;
             navigator.clipboard.writeText(text);
             alert("Quote copied to clipboard!");
+        }
+
+        function speakQuote() {
+            const speech = new SpeechSynthesisUtterance();
+            speech.text = `${quoteText.innerText} by ${authorText.innerText.replace("-", "")}`;
+            window.speechSynthesis.speak(speech);
         }
 
         getQuote();
