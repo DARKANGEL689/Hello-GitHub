@@ -24,7 +24,7 @@
             text-align: center;
             position: relative;
         }
-
+        
         h1 { margin-top: 0; color: #764ba2; font-size: 1.5em; text-transform: uppercase; letter-spacing: 2px; }
 
         .quote-box {
@@ -87,6 +87,7 @@
 <body>
 
     <div class="container">
+        <span id="category-badge" style="background: #eee; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; color: #555; text-transform: uppercase;">General</span>
         <h1>Daily Inspiration</h1>
 
         <div class="loader" id="loader"></div>
@@ -120,6 +121,7 @@
                 
                 quoteText.innerText = `"${data.quote}"`;
                 authorText.innerText = `- ${data.author}`;
+                document.getElementById("category-badge").innerText = data.category || "General";
             } catch (error) {
                 quoteText.innerText = "Oops! An error happened.";
                 authorText.innerText = "";
