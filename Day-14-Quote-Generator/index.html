@@ -99,6 +99,7 @@
         <div class="buttons">
             <button class="btn-tweet" onclick="tweetQuote()">🐦 Tweet</button>
             <button class="btn-new" onclick="getQuote()">New Quote</button>
+            <button onclick="copyQuote()" style="background: #e67e22;">📋 Copy</button>
         </div>
     </div>
 
@@ -142,6 +143,11 @@
         function hideLoadingSpinner() {
             loader.style.display = 'none';
             content.style.visibility = 'visible';
+        }
+        function copyQuote() {
+            const text = `${quoteText.innerText} ${authorText.innerText}`;
+            navigator.clipboard.writeText(text);
+            alert("Quote copied to clipboard!");
         }
 
         getQuote();
