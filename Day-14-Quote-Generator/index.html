@@ -98,6 +98,7 @@
         </div>
 
         <div class="buttons">
+            <button onclick="whatsappQuote()" style="background: #25D366;">💬 WhatsApp</button>
             <button class="btn-tweet" onclick="tweetQuote()">🐦 Tweet</button>
             <button class="btn-new" onclick="getQuote()">New Quote</button>
             <button onclick="copyQuote()" style="background: #e67e22;">📋 Copy</button>
@@ -169,6 +170,11 @@
             ];
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
             document.body.style.background = randomColor;
+        }
+        function whatsappQuote() {
+            const text = quoteText.innerText;
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
         }
 
         getQuote();
