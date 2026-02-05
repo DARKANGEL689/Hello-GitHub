@@ -87,6 +87,9 @@
     <div class="score-board">Moves: <span id="moves">0</span>
     <span style="margin-left: 20px;">Time: <span id="time">0</span>s</span>
     </div>
+    <div style="font-size: 0.9em; color: #ecf0f1; margin-bottom: 10px;">
+        Best Score: <span id="best-score">--</span> moves
+    </div>
 
     <div class="grid" id="game-grid">
         </div>
@@ -99,6 +102,8 @@
         let gameStarted = false;
         const grid = document.getElementById('game-grid');
         const movesDisplay = document.getElementById('moves');
+        let bestScore = localStorage.getItem('memory-best') || Infinity;
+        if(bestScore !== Infinity) document.getElementById('best-score').innerText = bestScore;
         
         const icons = ['🍎', '🍌', '🍒', '🍇', '🍉', '🍍', '🥝', '🍓'];
         
@@ -171,6 +176,14 @@
                 playSound('win');
                 clearInterval(timer);
                 setTimeout(() => alert(`You won in ${moves} moves! 🎉`), 500);
+                if (moves < bestScore) {
+                    bestScore = moves;
+                    localStorage.setItem('memory-best', bestScore);
+                    document.getElementById('best-score').innerText = bestScore;
+                    alert(`New High Score! ${moves} moves!`);
+                } else {
+                    alert(`You won in ${moves} moves!`);
+                }
             }
         }
 
