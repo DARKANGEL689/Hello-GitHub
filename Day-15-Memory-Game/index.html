@@ -84,7 +84,9 @@
 <body>
 
     <h1>🧠 Memory Game</h1>
-    <div class="score-board">Moves: <span id="moves">0</span></div>
+    <div class="score-board">Moves: <span id="moves">0</span>
+    <span style="margin-left: 20px;">Time: <span id="time">0</span>s</span>
+    </div>
 
     <div class="grid" id="game-grid">
         </div>
@@ -92,6 +94,9 @@
     <button onclick="startGame()">Restart Game</button>
 
     <script>
+        let timer;
+        let seconds = 0;
+        let gameStarted = false;
         const grid = document.getElementById('game-grid');
         const movesDisplay = document.getElementById('moves');
         
@@ -129,6 +134,7 @@
         }
 
         function flipCard() {
+            startTimer();
             if (lockBoard) return;
             if (this === flippedCards[0]) return; 
 
@@ -161,6 +167,7 @@
             matchedPairs++;
 
             if (matchedPairs === icons.length) {
+                clearInterval(timer);
                 setTimeout(() => alert(`You won in ${moves} moves! 🎉`), 500);
             }
         }
@@ -177,12 +184,25 @@
         }
 
         function startGame() {
+            clearInterval(timer);
+            seconds = 0;
+            gameStarted = false;
+            document.getElementById('time').innerText = 0;
             moves = 0;
             matchedPairs = 0;
             movesDisplay.innerText = 0;
             flippedCards = [];
             lockBoard = false;
             createBoard();
+        }
+        function startTimer() {
+            if (!gameStarted) {
+                gameStarted = true;
+                 timer = setInterval(() => {
+                    seconds++;
+                    document.getElementById('time').innerText = seconds;
+                }, 1000);
+            }
         }
 
         startGame();
