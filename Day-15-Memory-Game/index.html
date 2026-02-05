@@ -85,6 +85,10 @@
 
     <h1>🧠 Memory Game</h1>
     <div class="score-board">Moves: <span id="moves">0</span>
+        <div style="margin-bottom: 15px;">
+            <button onclick="setDifficulty('easy')" style="background: #27ae60;">Easy (4x4)</button>
+            <button onclick="setDifficulty('hard')" style="background: #c0392b;">Hard (6x4)</button>
+        </div>
     <span style="margin-left: 20px;">Time: <span id="time">0</span>s</span>
     </div>
     <div style="font-size: 0.9em; color: #ecf0f1; margin-bottom: 10px;">
@@ -104,7 +108,8 @@
         const movesDisplay = document.getElementById('moves');
         let bestScore = localStorage.getItem('memory-best') || Infinity;
         if(bestScore !== Infinity) document.getElementById('best-score').innerText = bestScore;
-        
+        const allIcons = ['🍎', '🍌', '🍒', '🍇', '🍉', '🍍', '🥝', '🍓', '🥑', '🌽', '🥕', '🥦'];
+        let currentLevel = 'easy';
         const icons = ['🍎', '🍌', '🍒', '🍇', '🍉', '🍍', '🥝', '🍓'];
         
         let cardsArray = [...icons, ...icons]; 
@@ -172,7 +177,7 @@
             flippedCards = []; 
             matchedPairs++;
 
-            if (matchedPairs === icons.length) {
+            if (matchedPairs === cardsArray.length / 2) {
                 playSound('win');
                 clearInterval(timer);
                 setTimeout(() => alert(`You won in ${moves} moves! 🎉`), 500);
@@ -249,6 +254,19 @@
                 oscillator.start();
                 oscillator.stop(audioCtx.currentTime + 0.5);
             }
+        }
+        function setDifficulty(level) {
+            currentLevel = level;
+            const gridEl = document.getElementById('game-grid');
+
+            if (level === 'easy') {
+                 cardsArray = [...allIcons.slice(0, 8), ...allIcons.slice(0, 8)];
+                 gridEl.style.gridTemplateColumns = 'repeat(4, 100px)';
+            } else {
+                cardsArray = [...allIcons, ...allIcons]; 
+                gridEl.style.gridTemplateColumns = 'repeat(6, 100px)';
+            }
+            startGame();
         }
 
         startGame();
