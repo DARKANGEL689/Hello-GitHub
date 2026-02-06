@@ -196,9 +196,32 @@
                     repoEl.classList.add('repo');
                     repoEl.href = repo.html_url;
                     repoEl.target = "_blank";
-                    repoEl.innerText = repo.name;
-                    repoContainer.appendChild(repoEl);
-                });
+
+                    repoEl.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>${repo.name}</span>
+                        <span style="font-size: 0.8em; color: #8b949e;">⭐ ${repo.stargazers_count}</span>
+                     </div>
+                     <div style="font-size: 0.8em; color: #8b949e; margin-top: 5px;">
+                            <span style="display:inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${getLanguageColor(repo.language)}; margin-right: 5px;"></span>
+                            ${repo.language || "Unknown"}
+                        </div>
+                     `;
+
+                     repoContainer.appendChild(repoEl);
+                    });
+            }
+            function getLanguageColor(lang) {
+                const colors = {
+                    "JavaScript": "#f1e05a",
+                    "Python": "#3572A5",
+                    "HTML": "#e34c26",
+                    "CSS": "#563d7c",
+                    "Java": "#b07219",
+                    "C++": "#f34b7d",
+                     "C": "#555555"
+                };
+                return colors[lang] || "#ccc"; 
             }
     </script>
 
