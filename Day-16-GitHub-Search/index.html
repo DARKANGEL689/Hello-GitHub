@@ -114,7 +114,7 @@
         <input type="text" id="username" placeholder="Enter GitHub username..." onkeypress="handleEnter(event)">
         <button onclick="getProfile()">Search</button>
     </div>
-
+        <div id="history" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; justify-content: center; max-width: 500px;"></div>
     <p class="error" id="error-msg">User not found!</p>
 
     <div class="profile-card" id="card">
@@ -160,7 +160,7 @@
                 if (!response.ok) {
                     throw new Error("User not found");
                 }
-
+                addToHistory(username);
                 const data = await response.json();
 
                 document.getElementById('avatar').src = data.avatar_url;
@@ -223,6 +223,34 @@
                 };
                 return colors[lang] || "#ccc"; 
             }
+            function addToHistory(username) {
+                let history = JSON.parse(localStorage.getItem('github-history')) || [];
+                if (!history.includes(username)) {
+                    history.unshift(username); 
+                    if(history.length > 5) history.pop(); 
+                    localStorage.setItem('github-history', JSON.stringify(history));
+                    renderHistory();
+                }
+            }
+
+            function renderHistory() {
+                const history = JSON.parse(localStorage.getItem('github-history')) || [];
+                const container = document.getElementById('history');
+                container.innerHTML = '';
+
+                history.forEach(user => {
+                    const badge = document.createElement('span');
+                    badge.innerText = user;
+                    badge.style.cssText = "background: #21262d; padding: 5px 10px; border-radius: 20px; font-size: 0.8em; cursor: pointer; border: 1px solid #30363d;";
+                    badge.onclick = () => {
+                        document.getElementById('username').value = user;
+                        getProfile();
+                    };
+                    container.appendChild(badge);
+                });
+            }
+
+              renderHistory();                                                
     </script>
 
 </body>
