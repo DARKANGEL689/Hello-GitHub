@@ -92,6 +92,18 @@
         .stat-label { font-size: 0.8em; color: #8b949e; }
         .joined-date { color: #8b949e; font-size: 0.9em; margin-bottom: 20px; }
         .error { color: #f85149; margin-top: 20px; display: none; }
+        .repo {
+            display: block;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            color: #58a6ff;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .repo:hover { background: #161b22; border-color: #8b949e; }
     </style>
 </head>
 <body>
@@ -125,6 +137,9 @@
                 <span class="stat-label">Following</span>
             </div>
         </div>
+        <div id="repos-list" style="text-align: left; margin-top: 20px;">
+            <h3 style="color: white; border-bottom: 1px solid #30363d; padding-bottom: 10px;">Latest Repos</h3>
+            </div>
     </div>
 
     <script>
@@ -158,7 +173,7 @@
                 document.getElementById('following').innerText = data.following;
 
                 card.style.display = 'block';
-
+                getRepos(username);
             } catch (error) {
                 errorMsg.style.display = 'block';
             }
@@ -169,6 +184,22 @@
                 getProfile();
             }
         }
+        async function getRepos(username) {
+                const repoContainer = document.getElementById('repos-list');
+                repoContainer.innerHTML = '<h3 style="color: white; border-bottom: 1px solid #30363d; padding-bottom: 10px;">Latest Repos</h3>';
+
+                const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=5`);
+                const repos = await response.json();
+
+                repos.forEach(repo => {
+                    const repoEl = document.createElement('a');
+                    repoEl.classList.add('repo');
+                    repoEl.href = repo.html_url;
+                    repoEl.target = "_blank";
+                    repoEl.innerText = repo.name;
+                    repoContainer.appendChild(repoEl);
+                });
+            }
     </script>
 
 </body>
