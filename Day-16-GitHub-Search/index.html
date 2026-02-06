@@ -90,7 +90,7 @@
         .stat-item { display: flex; flex-direction: column; }
         .stat-value { font-weight: bold; color: white; font-size: 1.2em; }
         .stat-label { font-size: 0.8em; color: #8b949e; }
-        
+        .joined-date { color: #8b949e; font-size: 0.9em; margin-bottom: 20px; }
         .error { color: #f85149; margin-top: 20px; display: none; }
     </style>
 </head>
@@ -110,7 +110,7 @@
         <h2 class="name" id="name">Name</h2>
         <a href="#" target="_blank" class="username" id="login">@username</a>
         <p class="bio" id="bio">This is the bio.</p>
-
+        <p class="joined-date" id="joined">Joined: --</p>
         <div class="stats">
             <div class="stat-item">
                 <span class="stat-value" id="repos">0</span>
@@ -132,7 +132,8 @@
             const username = document.getElementById('username').value;
             const card = document.getElementById('card');
             const errorMsg = document.getElementById('error-msg');
-            
+            const date = new Date(data.created_at);
+            document.getElementById('joined').innerText = `Joined: ${date.toDateString()}`;
             if (!username) return;
 
             card.style.display = 'none';
