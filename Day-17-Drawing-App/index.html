@@ -77,9 +77,9 @@
         </div>
 
         <div class="tool-group">
-            <button onclick="setSize(5)">•</button>
-            <button onclick="setSize(10)">●</button>
-            <button onclick="setSize(20)" style="font-size: 1.5em;">●</button>
+          <label for="size-slider" style="font-size: 0.8em; margin-right: 5px;">Size:</label>
+          <input type="range" id="size-slider" min="1" max="50" value="5">
+          <span id="size-val">5</span>
         </div>
 
         <div class="tool-group">
@@ -148,7 +148,14 @@
         }
         
         colorPicker.addEventListener('change', (e) => isEraser = false);
+        const sizeSlider = document.getElementById('size-slider');
+        const sizeVal = document.getElementById('size-val');
 
+        sizeSlider.addEventListener('input', (e) => {
+            size = e.target.value;
+            sizeVal.innerText = size;
+            isEraser = false;
+        });
     </script>
 
 </body>
