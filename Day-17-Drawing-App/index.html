@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Day 17: Drawing App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; 
+        }
+
+        h1 { margin-top: 10px; color: #333; }
+
+        .toolbar {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+            z-index: 10;
+        }
+
+        .tool-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            border-right: 1px solid #ddd;
+            padding-right: 15px;
+        }
+        .tool-group:last-child { border: none; }
+
+        button {
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2em;
+            transition: 0.2s;
+        }
+        button:hover { transform: scale(1.1); }
+        button.active { outline: 2px solid #333; }
+
+        input[type="color"] {
+            border: none;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            background: none;
+        }
+
+        canvas {
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            cursor: crosshair;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🎨 Canvas Studio</h1>
+
+    <div class="toolbar">
+        <div class="tool-group">
+            <input type="color" id="color" value="#000000">
+        </div>
+
+        <div class="tool-group">
+            <button onclick="setSize(5)">•</button>
+            <button onclick="setSize(10)">●</button>
+            <button onclick="setSize(20)" style="font-size: 1.5em;">●</button>
+        </div>
+
+        <div class="tool-group">
+            <button onclick="setEraser()" title="Eraser">🧽</button>
+            <button onclick="clearCanvas()" title="Clear All" style="background: #ff7675; color: white;">🗑️</button>
+        </div>
+    </div>
+
+    <canvas id="drawing-board"></canvas>
+
+    <script>
+        const canvas = document.getElementById('drawing-board');
+        const ctx = canvas.getContext('2d');
+        const colorPicker = document.getElementById('color');
+
+        canvas.width = window.innerWidth * 0.8;
+        canvas.height = window.innerHeight * 0.7;
+
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        let hue = 0;
+        let direction = true;
+
+        let color = '#000000';
+        let size = 5;
+        let isEraser = false;
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        });
+
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseout', () => isDrawing = false);
+
+        function draw(e) {
+            if (!isDrawing) return; 
+
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            
+            ctx.strokeStyle = isEraser ? '#ffffff' : colorPicker.value;
+            ctx.lineWidth = size;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            ctx.stroke();
+
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+
+        function setSize(newSize) {
+            size = newSize;
+            isEraser = false;
+        }
+
+        function setEraser() {
+            isEraser = true;
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        colorPicker.addEventListener('change', (e) => isEraser = false);
+
+    </script>
+
+</body>
+</html>
