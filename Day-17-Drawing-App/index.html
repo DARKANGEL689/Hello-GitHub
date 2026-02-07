@@ -74,6 +74,7 @@
     <div class="toolbar">
         <div class="tool-group">
             <input type="color" id="color" value="#000000">
+            <button onclick="toggleRainbow()" id="rainbow-btn" title="Rainbow Mode">🌈</button>
         </div>
 
         <div class="tool-group">
@@ -94,10 +95,10 @@
         const canvas = document.getElementById('drawing-board');
         const ctx = canvas.getContext('2d');
         const colorPicker = document.getElementById('color');
-
+        
         canvas.width = window.innerWidth * 0.8;
         canvas.height = window.innerHeight * 0.7;
-
+        let isRainbow = false;
         let isDrawing = false;
         let lastX = 0;
         let lastY = 0;
@@ -124,7 +125,14 @@
             ctx.moveTo(lastX, lastY);
             ctx.lineTo(e.offsetX, e.offsetY);
             
-            ctx.strokeStyle = isEraser ? '#ffffff' : colorPicker.value;
+            if (isEraser) {
+                ctx.strokeStyle = '#ffffff'; 
+            } else if (isRainbow) {
+                ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+                hue++;
+            } else {
+                ctx.strokeStyle = colorPicker.value;
+            }
             ctx.lineWidth = size;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
@@ -161,6 +169,10 @@
             link.download = 'my-masterpiece.png';
             link.href = canvas.toDataURL();
             link.click();
+        }
+        function toggleRainbow() {
+            isRainbow = !isRainbow;
+            document.getElementById('rainbow-btn').classList.toggle('active');
         }
     </script>
 
