@@ -86,6 +86,7 @@
         <div class="tool-group">
             <button onclick="setEraser()" title="Eraser">🧽</button>
             <button onclick="saveArt()" title="Download" style="background: #0984e3; color: white;">💾</button>
+            <button onclick="undo()" title="Undo">↩️</button>
         </div>
     </div>
 
@@ -104,12 +105,14 @@
         let lastY = 0;
         let hue = 0;
         let direction = true;
-
+        let undoStack = [];
+        let redoStack = []; 
         let color = '#000000';
         let size = 5;
         let isEraser = false;
 
         canvas.addEventListener('mousedown', (e) => {
+            saveState();
             isDrawing = true;
             [lastX, lastY] = [e.offsetX, e.offsetY];
         });
@@ -173,6 +176,20 @@
         function toggleRainbow() {
             isRainbow = !isRainbow;
             document.getElementById('rainbow-btn').classList.toggle('active');
+        }
+        function saveState() {
+            if (undoStack.length > 10) undoStack.shift(); 
+            undoStack.push(canvas.toDataURL());
+        }
+        function undo() {
+            if (undoStack.length === 0) return;
+            const imgData = undoStack.pop();
+            const img = new Image();
+            img.src = imgData;
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+            };
         }
     </script>
 
