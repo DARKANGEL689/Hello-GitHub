@@ -84,7 +84,7 @@
 
         <div class="tool-group">
             <button onclick="setEraser()" title="Eraser">🧽</button>
-            <button onclick="clearCanvas()" title="Clear All" style="background: #ff7675; color: white;">🗑️</button>
+            <button onclick="saveArt()" title="Download" style="background: #0984e3; color: white;">💾</button>
         </div>
     </div>
 
@@ -156,6 +156,12 @@
             sizeVal.innerText = size;
             isEraser = false;
         });
+        function saveArt() {
+            const link = document.createElement('a');
+            link.download = 'my-masterpiece.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
     </script>
 
 </body>
