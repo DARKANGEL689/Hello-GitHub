@@ -223,6 +223,20 @@
         });
 
         canvas.addEventListener('touchend', () => isDrawing = false);
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'z') {
+                undo();
+            }
+            if (e.key === 'b') { 
+                isEraser = false;
+            }
+            if (e.key === 'e') { 
+                setEraser();
+            }
+            if (e.key === 'c') { 
+                clearCanvas();
+            }
+        });
     </script>
 
 </body>
