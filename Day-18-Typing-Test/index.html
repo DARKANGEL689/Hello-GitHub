@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Day 18: Speed Typer</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: #323437;
+            color: #d1d0c5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 { color: #e2b714; margin-bottom: 20px; }
+
+        .container {
+            background: #2c2e31;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 700px;
+            text-align: center;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            color: #646669;
+        }
+        
+        .stat-val { color: #e2b714; font-weight: bold; }
+
+        .quote-display {
+            font-size: 1.5em;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            text-align: left;
+            min-height: 100px;
+        }
+
+        .correct { color: #d1d0c5; } 
+        .incorrect { color: #ca4754; text-decoration: underline; }
+        .pending { color: #646669; }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            opacity: 0; 
+            position: absolute;
+            z-index: -1;
+        }
+
+        button {
+            background: #e2b714;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            color: #323437;
+            margin-top: 20px;
+        }
+        button:hover { background: #d1a812; }
+
+    </style>
+</head>
+<body>
+
+    <h1>⚡ Speed Typer</h1>
+
+    <div class="container" onclick="focusInput()">
+        <div class="stats">
+            <span>Time: <span id="timer" class="stat-val">0</span>s</span>
+            <span>WPM: <span id="wpm" class="stat-val">0</span></span>
+            <span>Accuracy: <span id="accuracy" class="stat-val">100</span>%</span>
+        </div>
+
+        <div class="quote-display" id="quoteDisplay">Loading...</div>
+        
+        <textarea id="quoteInput" autofocus></textarea>
+
+        <button onclick="renderNewQuote()">🔄 Restart Test</button>
+    </div>
+
+    <script>
+        const quotes = [
+            "The quick brown fox jumps over the lazy dog.",
+            "To be or not to be, that is the question.",
+            "All that glitters is not gold.",
+            "Coding is not just code, that is a puzzle to be solved.",
+            "Programs must be written for people to read, and only incidentally for machines to execute."
+        ];
+
+        const quoteDisplay = document.getElementById('quoteDisplay');
+        const quoteInput = document.getElementById('quoteInput');
+        const timerElement = document.getElementById('timer');
+        const wpmElement = document.getElementById('wpm');
+        const accElement = document.getElementById('accuracy');
+
+        let startTime;
+        let timerInterval;
+        let isRunning = false;
+
+        function renderNewQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const quote = quotes[randomIndex];
+            
+            quoteDisplay.innerHTML = '';
+            quote.split('').forEach(character => {
+                const characterSpan = document.createElement('span');
+                characterSpan.innerText = character;
+                characterSpan.classList.add('pending');
+                quoteDisplay.appendChild(characterSpan);
+            });
+
+            quoteInput.value = null;
+            resetTimer();
+        }
+
+        quoteInput.addEventListener('input', () => {
+            if (!isRunning) startTimer();
+
+            const arrayQuote = quoteDisplay.querySelectorAll('span');
+            const arrayValue = quoteInput.value.split('');
+            let correct = true;
+            let correctChars = 0;
+
+            arrayQuote.forEach((characterSpan, index) => {
+                const character = arrayValue[index];
+
+                if (character == null) {
+                    characterSpan.classList.remove('correct');
+                    characterSpan.classList.remove('incorrect');
+                    characterSpan.classList.add('pending');
+                    correct = false;
+                } else if (character === characterSpan.innerText) {
+                    characterSpan.classList.add('correct');
+                    characterSpan.classList.remove('incorrect');
+                    characterSpan.classList.remove('pending');
+                    correctChars++;
+                } else {
+                    characterSpan.classList.remove('correct');
+                    characterSpan.classList.add('incorrect');
+                    characterSpan.classList.remove('pending');
+                    correct = false;
+                }
+            });
+
+            const accuracy = Math.round((correctChars / arrayValue.length) * 100) || 100;
+            accElement.innerText = accuracy;
+
+            if (correct && arrayValue.length === arrayQuote.length) {
+                endGame();
+            }
+        });
+
+        function startTimer() {
+            isRunning = true;
+            startTime = new Date();
+            timerInterval = setInterval(() => {
+                const timeInSeconds = getTimerTime();
+                timerElement.innerText = timeInSeconds;
+                
+                const words = quoteInput.value.length / 5;
+                const minutes = timeInSeconds / 60;
+                const wpm = Math.floor(words / minutes) || 0;
+                wpmElement.innerText = wpm;
+            }, 1000);
+        }
+
+        function getTimerTime() {
+            return Math.floor((new Date() - startTime) / 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerElement.innerText = 0;
+            wpmElement.innerText = 0;
+            accElement.innerText = 100;
+            isRunning = false;
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            document.body.style.background = "#2d3436";
+            setTimeout(() => document.body.style.background = "#323437", 200);
+        }
+
+        function focusInput() {
+            quoteInput.focus();
+        }
+
+        renderNewQuote();
+    </script>
+</body>
+</html>
