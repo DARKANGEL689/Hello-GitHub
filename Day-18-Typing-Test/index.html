@@ -114,6 +114,7 @@
         const wpmElement = document.getElementById('wpm');
         const accElement = document.getElementById('accuracy');
         const errorElement = document.getElementById('errors');
+        const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3'); 
         let startTime;
         let timerInterval;
         let isRunning = false;
@@ -190,6 +191,8 @@
             if (correct && arrayValue.length === arrayQuote.length) {
                 endGame();
             }
+            clickSound.currentTime = 0; 
+            clickSound.play();
         });
 
         function startTimer() {
