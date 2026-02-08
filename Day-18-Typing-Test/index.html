@@ -83,7 +83,7 @@
 <body>
 
     <h1>⚡ Speed Typer</h1>
-
+    <h3 style="color: #646669; margin-top: 0;">Best WPM: <span id="best-wpm" style="color: #e2b714;">0</span></h3> 
     <div class="container" onclick="focusInput()">
         <div class="stats">
             <span>Time: <span id="timer" class="stat-val">0</span>s</span>
@@ -224,11 +224,22 @@
             isRunning = false;
             document.body.style.background = "#2d3436";
             setTimeout(() => document.body.style.background = "#323437", 200);
+            const currentWpm = parseInt(wpmElement.innerText);
+            const bestWpm = parseInt(localStorage.getItem('bestWPM')) || 0;
+
+            if (currentWpm > bestWpm) {
+                localStorage.setItem('bestWPM', currentWpm);
+                bestWpmElement.innerText = currentWpm;
+                alert("🎉 NEW HIGH SCORE!");
+            }          
         }
 
         function focusInput() {
             quoteInput.focus();
         }
+        const bestWpmElement = document.getElementById('best-wpm');
+        const savedScore = localStorage.getItem('bestWPM') || 0;
+        bestWpmElement.innerText = savedScore;
 
         renderNewQuote();
     </script>
