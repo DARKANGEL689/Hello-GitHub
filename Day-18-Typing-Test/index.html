@@ -243,6 +243,13 @@
         const bestWpmElement = document.getElementById('best-wpm');
         const savedScore = localStorage.getItem('bestWPM') || 0;
         bestWpmElement.innerText = savedScore;
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault(); 
+                renderNewQuote();
+                quoteInput.focus();
+            }
+        });
 
         renderNewQuote();
     </script>
