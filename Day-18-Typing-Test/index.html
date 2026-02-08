@@ -117,20 +117,31 @@
         let timerInterval;
         let isRunning = false;
 
-        function renderNewQuote() {
-            const randomIndex = Math.floor(Math.random() * quotes.length);
-            const quote = quotes[randomIndex];
-            
-            quoteDisplay.innerHTML = '';
-            quote.split('').forEach(character => {
-                const characterSpan = document.createElement('span');
-                characterSpan.innerText = character;
-                characterSpan.classList.add('pending');
-                quoteDisplay.appendChild(characterSpan);
-            });
+        const RANDOM_QUOTE_API_URL = 'https://dummyjson.com/quotes/random';
 
-            quoteInput.value = null;
-            resetTimer();
+        async function renderNewQuote() {
+            quoteDisplay.innerHTML = 'Loading Quote...';
+
+            try {
+                const response = await fetch(RANDOM_QUOTE_API_URL);
+                const data = await response.json();
+                const quote = data.quote; 
+
+                quoteDisplay.innerHTML = '';
+                quote.split('').forEach(character => {
+                    const characterSpan = document.createElement('span');
+                    characterSpan.innerText = character;
+                    characterSpan.classList.add('pending');
+                    quoteDisplay.appendChild(characterSpan);
+                });
+
+                quoteDisplay.querySelector('span').classList.add('current');
+
+                quoteInput.value = null;
+                resetTimer();
+            } catch (error) {
+                quoteDisplay.innerText = "Error fetching quote. Check internet.";
+            }
         }
 
         quoteInput.addEventListener('input', () => {
