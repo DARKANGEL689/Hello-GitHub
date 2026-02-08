@@ -47,6 +47,14 @@
 
         .correct { color: #d1d0c5; } 
         .incorrect { color: #ca4754; text-decoration: underline; }
+        .current {
+            border-left: 2px solid #e2b714;
+            background-color: rgba(226, 183, 20, 0.2);
+            color: white !important;
+            font-weight: bold;
+            transform: scale(1.2);
+            display: inline-block; 
+        }
         .pending { color: #646669; }
 
         textarea {
@@ -151,6 +159,12 @@
                     characterSpan.classList.add('incorrect');
                     characterSpan.classList.remove('pending');
                     correct = false;
+                }
+
+             arrayQuote.forEach(span => span.classList.remove('current'));
+
+                if (arrayValue.length < arrayQuote.length) {
+                    arrayQuote[arrayValue.length].classList.add('current');
                 }
             });
 
