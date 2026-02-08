@@ -89,6 +89,7 @@
             <span>Time: <span id="timer" class="stat-val">0</span>s</span>
             <span>WPM: <span id="wpm" class="stat-val">0</span></span>
             <span>Accuracy: <span id="accuracy" class="stat-val">100</span>%</span>
+            <span>Errors: <span id="errors" class="stat-val" style="color: #ca4754;">0</span></span>
         </div>
 
         <div class="quote-display" id="quoteDisplay">Loading...</div>
@@ -112,7 +113,7 @@
         const timerElement = document.getElementById('timer');
         const wpmElement = document.getElementById('wpm');
         const accElement = document.getElementById('accuracy');
-
+        const errorElement = document.getElementById('errors');
         let startTime;
         let timerInterval;
         let isRunning = false;
@@ -166,6 +167,10 @@
                     characterSpan.classList.remove('pending');
                     correctChars++;
                 } else {
+                    if (!characterSpan.classList.contains('incorrect')) {
+                        let currentErrors = parseInt(errorElement.innerText);
+                        errorElement.innerText = currentErrors + 1;
+                    }
                     characterSpan.classList.remove('correct');
                     characterSpan.classList.add('incorrect');
                     characterSpan.classList.remove('pending');
@@ -211,6 +216,7 @@
             wpmElement.innerText = 0;
             accElement.innerText = 100;
             isRunning = false;
+            errorElement.innerText = 0;
         }
 
         function endGame() {
