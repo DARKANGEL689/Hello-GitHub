@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Day 19: Voice Notes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+        }
+
+        h1 { margin-bottom: 20px; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            width: 500px;
+            text-align: center;
+        }
+
+        #transcript {
+            width: 100%;
+            height: 200px;
+            border-radius: 10px;
+            border: none;
+            padding: 15px;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            resize: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        .btn-group { display: flex; justify-content: center; gap: 15px; }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #start-btn { background: #00b894; color: white; }
+        #start-btn:hover { background: #00a884; transform: scale(1.05); }
+        
+        #stop-btn { background: #ff7675; color: white; display: none; }
+        
+        .secondary-btn { background: white; color: #333; }
+        .secondary-btn:hover { background: #f1f1f1; }
+
+        .pulse {
+            box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.7);
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 184, 148, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 184, 148, 0); }
+        }
+        
+        .status { margin-bottom: 15px; font-size: 0.9em; opacity: 0.8; height: 20px;}
+    </style>
+</head>
+<body>
+
+    <h1>🎙️ Voice Notes</h1>
+
+    <div class="container">
+        <p class="status" id="status">Click Start to record...</p>
+        
+        <textarea id="transcript" placeholder="Your speech will appear here..."></textarea>
+        
+        <div class="btn-group">
+            <button id="start-btn" onclick="startRecording()">🎤 Start</button>
+            <button id="stop-btn" onclick="stopRecording()">⏹️ Stop</button>
+            <button class="secondary-btn" onclick="copyText()">📋 Copy</button>
+            <button class="secondary-btn" onclick="clearText()">🗑️ Clear</button>
+        </div>
+    </div>
+
+    <script>
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (!SpeechRecognition) {
+            alert("Your browser does not support Speech Recognition. Try Google Chrome!");
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true; 
+        recognition.interimResults = true; 
+        recognition.lang = 'en-US';
+
+        const transcriptArea = document.getElementById('transcript');
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const statusText = document.getElementById('status');
+        
+        let finalTranscript = '';
+
+        recognition.onstart = () => {
+            statusText.innerText = "Listening... Speak now!";
+            startBtn.style.display = 'none';
+            stopBtn.style.display = 'flex';
+            stopBtn.classList.add('pulse');
+        };
+
+        recognition.onend = () => {
+            statusText.innerText = "Stopped. Click Start to resume.";
+            startBtn.style.display = 'flex';
+            stopBtn.style.display = 'none';
+            stopBtn.classList.remove('pulse');
+        };
+
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += transcript + ' ';
+                } else {
+                    interimTranscript += transcript;
+                }
+            }
+            
+            transcriptArea.value = finalTranscript + interimTranscript;
+        };
+
+        recognition.onerror = (event) => {
+            statusText.innerText = "Error: " + event.error;
+            stopRecording();
+        };
+
+        function startRecording() {
+            finalTranscript = transcriptArea.value; 
+            if(finalTranscript.length > 0 && !finalTranscript.endsWith(' ')) {
+                 finalTranscript += ' ';
+            }
+            recognition.start();
+        }
+
+        function stopRecording() {
+            recognition.stop();
+        }
+
+        function copyText() {
+            transcriptArea.select();
+            document.execCommand('copy');
+            alert("Copied to clipboard!");
+        }
+
+        function clearText() {
+            transcriptArea.value = '';
+            finalTranscript = '';
+            statusText.innerText = "Cleared!";
+        }
+    </script>
+</body>
+</html>
