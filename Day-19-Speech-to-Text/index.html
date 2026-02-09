@@ -108,7 +108,7 @@
         <p class="status" id="status">Click Start to record...</p>
         
         <textarea id="transcript" placeholder="Your speech will appear here..."></textarea>
-        
+        <div style="text-align: right; font-size: 0.8em; margin-top: 5px;">Words: <span id="word-count">0</span></div>
         <div class="btn-group">
             <button id="start-btn" onclick="startRecording()">🎤 Start</button>
             <button id="stop-btn" onclick="stopRecording()">⏹️ Stop</button>
@@ -164,7 +164,10 @@
                 }
             }
             
-            transcriptArea.value = finalTranscript + interimTranscript;
+            transcriptArea.value = finalTranscript + interimTranscript; 
+            const text = transcriptArea.value.trim();
+            const count = text.length === 0 ? 0 : text.split(/\s+/).length;
+            document.getElementById('word-count').innerText = count;
         };
 
         recognition.onerror = (event) => {
