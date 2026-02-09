@@ -103,6 +103,7 @@
             <button class="secondary-btn" onclick="copyText()">📋 Copy</button>
             <button class="secondary-btn" onclick="clearText()">🗑️ Clear</button>
             <button class="secondary-btn" onclick="readAloud()">🔊 Speak</button>
+            <button class="secondary-btn" onclick="downloadFile()">💾 Save</button>
         </div>
     </div>
 
@@ -199,6 +200,21 @@
             speech.pitch = 1;
 
             window.speechSynthesis.speak(speech);
+        }
+        function downloadFile() {
+            const text = transcriptArea.value;
+            const filename = 'voice-note.txt';
+
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
         }
     </script>
 </body>
