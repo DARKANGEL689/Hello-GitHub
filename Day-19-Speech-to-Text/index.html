@@ -102,6 +102,7 @@
             <button id="stop-btn" onclick="stopRecording()">⏹️ Stop</button>
             <button class="secondary-btn" onclick="copyText()">📋 Copy</button>
             <button class="secondary-btn" onclick="clearText()">🗑️ Clear</button>
+            <button class="secondary-btn" onclick="readAloud()">🔊 Speak</button>
         </div>
     </div>
 
@@ -187,6 +188,18 @@
             recognition.lang = langSelect.value;
             statusText.innerText = "Language changed to " + langSelect.options[langSelect.selectedIndex].text;
         });
+        function readAloud() {
+            if (!transcriptArea.value) return;
+
+            const speech = new SpeechSynthesisUtterance();
+            speech.text = transcriptArea.value;
+            speech.lang = langSelect.value; 
+            speech.volume = 1;
+            speech.rate = 1;
+            speech.pitch = 1;
+
+            window.speechSynthesis.speak(speech);
+        }
     </script>
 </body>
 </html>
