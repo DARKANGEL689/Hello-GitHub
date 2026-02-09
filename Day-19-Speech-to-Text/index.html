@@ -85,6 +85,14 @@
     <h1>🎙️ Voice Notes</h1>
 
     <div class="container">
+        <select id="lang-select" style="margin-bottom: 15px; padding: 5px; border-radius: 5px; border: none;">
+            <option value="en-US">🇺🇸 English (US)</option>
+            <option value="en-GB">🇬🇧 English (UK)</option>
+            <option value="hi-IN">🇮🇳 Hindi</option>
+            <option value="es-ES">🇪🇸 Spanish</option>
+            <option value="fr-FR">🇫🇷 French</option>
+            <option value="ja-JP">🇯🇵 Japanese</option>
+        </select>
         <p class="status" id="status">Click Start to record...</p>
         
         <textarea id="transcript" placeholder="Your speech will appear here..."></textarea>
@@ -173,6 +181,12 @@
             finalTranscript = '';
             statusText.innerText = "Cleared!";
         }
+        const langSelect = document.getElementById('lang-select');
+
+        langSelect.addEventListener('change', () => {
+            recognition.lang = langSelect.value;
+            statusText.innerText = "Language changed to " + langSelect.options[langSelect.selectedIndex].text;
+        });
     </script>
 </body>
 </html>
