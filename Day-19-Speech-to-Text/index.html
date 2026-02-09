@@ -57,6 +57,18 @@
             align-items: center;
             gap: 10px;
         }
+        body.dark-mode {
+            background: #2d3436; /* Dark Grey */
+        }
+        .dark-mode .container {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .dark-mode #transcript {
+            background: #636e72;
+            color: white;
+        }
+        .dark-mode h1 { color: #dfe6e9; }
 
         #start-btn { background: #00b894; color: white; }
         #start-btn:hover { background: #00a884; transform: scale(1.05); }
@@ -81,7 +93,7 @@
     </style>
 </head>
 <body>
-
+    <button onclick="toggleDarkMode()" style="position: absolute; top: 20px; right: 20px; background: none; font-size: 1.5em;">🌓</button>
     <h1>🎙️ Voice Notes</h1>
 
     <div class="container">
@@ -215,6 +227,9 @@
             element.click();
 
             document.body.removeChild(element);
+        }
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
         }
     </script>
 </body>
