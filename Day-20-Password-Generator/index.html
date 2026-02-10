@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Day 20: Password Generator</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: #101522; 
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #232742;
+            padding: 20px;
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        h2 { text-align: center; margin-bottom: 20px; color: #4facfe; }
+
+        .result-container {
+            background: #101522;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        #result {
+            font-size: 1.2em;
+            word-break: break-all;
+            color: #4facfe;
+            min-height: 25px;
+        }
+
+        .btn {
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            background: none;
+            color: #fff;
+            transition: 0.2s;
+        }
+        .btn:hover { color: #4facfe; }
+
+        .setting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        input[type="checkbox"] {
+            cursor: pointer;
+            transform: scale(1.5);
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-family: inherit;
+        }
+        .generate-btn:hover { background: #00f2fe; color: #101522; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🔐 PassGen</h2>
+        
+        <div class="result-container">
+            <span id="result">Click Generate</span>
+            <button class="btn" onclick="copyPassword()" title="Copy">📋</button>
+        </div>
+
+        <div class="setting">
+            <label>Password Length</label>
+            <input type="number" id="length" min="4" max="20" value="12" style="width: 50px; padding: 5px;">
+        </div>
+        
+        <div class="setting">
+            <label>Include Uppercase</label>
+            <input type="checkbox" id="uppercase" checked>
+        </div>
+        
+        <div class="setting">
+            <label>Include Lowercase</label>
+            <input type="checkbox" id="lowercase" checked>
+        </div>
+        
+        <div class="setting">
+            <label>Include Numbers</label>
+            <input type="checkbox" id="numbers" checked>
+        </div>
+        
+        <div class="setting">
+            <label>Include Symbols</label>
+            <input type="checkbox" id="symbols" checked>
+        </div>
+
+        <button class="generate-btn" onclick="generatePassword()">Generate Password</button>
+    </div>
+
+    <script>
+        const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const lower = 'abcdefghijklmnopqrstuvwxyz';
+        const nums = '0123456789';
+        const syms = '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+
+        const resultEl = document.getElementById('result');
+        const lengthEl = document.getElementById('length');
+        const uppercaseEl = document.getElementById('uppercase');
+        const lowercaseEl = document.getElementById('lowercase');
+        const numbersEl = document.getElementById('numbers');
+        const symbolsEl = document.getElementById('symbols');
+
+        function getRandomChar(str) {
+            return str[Math.floor(Math.random() * str.length)];
+        }
+
+        function generatePassword() {
+            let length = +lengthEl.value; 
+            let generatedPassword = '';
+            let typesArr = [];
+
+            if (uppercaseEl.checked) typesArr.push(upper);
+            if (lowercaseEl.checked) typesArr.push(lower);
+            if (numbersEl.checked) typesArr.push(nums);
+            if (symbolsEl.checked) typesArr.push(syms);
+
+            if (typesArr.length === 0) {
+                alert("Please select at least one character type!");
+                return;
+            }
+
+            for (let i = 0; i < length; i++) {
+                const randomType = typesArr[Math.floor(Math.random() * typesArr.length)];
+                generatedPassword += getRandomChar(randomType);
+            }
+
+            resultEl.innerText = generatedPassword;
+        }
+
+        function copyPassword() {
+            const textarea = document.createElement('textarea');
+            const password = resultEl.innerText;
+
+            if (!password || password === 'Click Generate') return;
+
+            textarea.value = password;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            textarea.remove();
+            
+            alert('Password copied to clipboard! 🔒');
+        }
+    </script>
+
+</body>
+</html>
