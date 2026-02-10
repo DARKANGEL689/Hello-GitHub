@@ -35,6 +35,12 @@
             border-radius: 5px;
             margin-bottom: 20px;
             position: relative;
+            cursor: pointer; 
+            transition: background 0.2s;
+        }
+        .result-container:active {
+            transform: scale(0.98);
+            background: #1e2235;
         }
 
         #result {
@@ -135,9 +141,9 @@
     <div class="container">
         <h2>🔐 PassGen</h2>
         
-        <div class="result-container">
+        <div class="result-container" onclick="copyPassword()" title="Click to Copy">
             <span id="result">Click Generate</span>
-            <button class="btn" onclick="copyPassword()" title="Copy">📋</button>
+            <button class="btn">📋</button> 
         </div>
         <div class="strength-meter"><div id="strength-bar" class="strength-bar"></div></div>
         <div class="presets">
