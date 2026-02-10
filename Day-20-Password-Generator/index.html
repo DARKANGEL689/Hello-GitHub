@@ -132,7 +132,10 @@
             <label>Include Symbols</label>
             <input type="checkbox" id="symbols" checked>
         </div>
-
+        <div class="setting">
+            <label>Exclude Ambiguous (l, 1, O, 0)</label>
+            <input type="checkbox" id="exclude-ambiguous">
+        </div>
         <button class="generate-btn" onclick="generatePassword()">Generate Password</button>
     </div>
 
@@ -170,7 +173,13 @@
 
             for (let i = 0; i < length; i++) {
                 const randomType = typesArr[Math.floor(Math.random() * typesArr.length)];
-                generatedPassword += getRandomChar(randomType);
+                let char = getRandomChar(randomType);
+                if (document.getElementById('exclude-ambiguous').checked) {
+                    while (['l', '1', 'I', 'O', '0'].includes(char)) {
+                        char = getRandomChar(randomType); 
+                    }
+                }
+                generatedPassword += char;
             }
 
             resultEl.innerText = generatedPassword;
