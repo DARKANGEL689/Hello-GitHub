@@ -213,6 +213,33 @@
             else if (strength < 4) bar.classList.add('medium');
             else bar.classList.add('strong');
         }
+        function generatePassword() {
+            let length = +lengthEl.value;
+            let generatedPassword = '';
+            const typesArr = [];
+
+            if (uppercaseEl.checked) typesArr.push(upper);
+            if (lowercaseEl.checked) typesArr.push(lower);
+            if (numbersEl.checked) typesArr.push(nums);
+            if (symbolsEl.checked) typesArr.push(syms);
+
+            if (typesArr.length === 0) return alert("Select at least one option!");
+
+            typesArr.forEach(type => {
+                generatedPassword += getRandomChar(type);
+            });
+
+            for (let i = generatedPassword.length; i < length; i++) {
+                const randomType = typesArr[Math.floor(Math.random() * typesArr.length)];
+                generatedPassword += getRandomChar(randomType);
+            }
+
+            generatedPassword = generatedPassword.split('').sort(() => 0.5 - Math.random()).join('');
+
+            resultEl.innerText = generatedPassword;
+            updateStrength(generatedPassword);
+            addToHistory(generatedPassword);
+        }
     </script>
 
 </body>
