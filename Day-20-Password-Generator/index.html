@@ -112,6 +112,22 @@
         .toast.show {
             opacity: 1;
         }
+        .presets {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+        .preset-btn {
+            background: #2d3436;
+            border: 1px solid #4facfe;
+            color: #4facfe;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .preset-btn:hover { background: #4facfe; color: white; }
     </style>
 </head>
 <body>
@@ -124,6 +140,12 @@
             <button class="btn" onclick="copyPassword()" title="Copy">📋</button>
         </div>
         <div class="strength-meter"><div id="strength-bar" class="strength-bar"></div></div>
+        <div class="presets">
+            <button class="preset-btn" onclick="setPreset(4, false, false, true, false)">PIN</button>
+            <button class="preset-btn" onclick="setPreset(8, true, true, true, false)">Easy</button>
+            <button class="preset-btn" onclick="setPreset(16, true, true, true, true)">Strong</button>
+            <button class="preset-btn" onclick="setPreset(32, true, true, true, true)">Ultimate</button>
+        </div>
         <div class="setting">
            <label>Length: <span id="length-val">12</span></label>
            <input type="range" id="length" min="4" max="32" value="12" oninput="document.getElementById('length-val').innerText = this.value">
@@ -261,6 +283,17 @@
             resultEl.innerText = generatedPassword;
             updateStrength(generatedPassword);
             addToHistory(generatedPassword);
+        }
+        function setPreset(len, upper, lower, num, sym) {
+            document.getElementById('length').value = len;
+            document.getElementById('length-val').innerText = len; 
+
+            document.getElementById('uppercase').checked = upper;
+            document.getElementById('lowercase').checked = lower;
+            document.getElementById('numbers').checked = num;
+            document.getElementById('symbols').checked = sym;
+
+            generatePassword(); 
         }
     </script>
 
