@@ -22,6 +22,21 @@
             margin-top: 0;
             margin-bottom: 30px; 
         }
+        #search {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            width: 300px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-size: 1em;
+            transition: 0.3s;
+        }
+        #search:focus {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            width: 350px; 
+        }
 
         .board {
             display: flex;
@@ -109,6 +124,7 @@
 <body>
 
     <h1>📋 Project Board</h1>
+    <input type="text" id="search" placeholder="🔍 Search tasks..." onkeyup="filterTasks()">
 
     <div class="board">
         <div class="column">
@@ -276,6 +292,18 @@
                 document.getElementById('done').innerHTML = '';
                 saveBoard();
             }
+        }
+        function filterTasks() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            
+            cards.forEach(card => {
+                if (card.innerText.toLowerCase().includes(query)) {
+                    card.style.display = 'flex'; 
+                } else {
+                    card.style.display = 'none'; 
+                }
+            });
         }
     </script>
     <div id="trash" class="trash-zone">🗑️ Drop here to delete</div>
