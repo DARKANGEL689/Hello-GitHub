@@ -129,6 +129,7 @@
 
             card.addEventListener('dragend', () => {
                 card.classList.remove('dragging');
+                saveBoard(); 
             });
         }
 
@@ -161,18 +162,47 @@
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
-        function addTask(columnId) {
+        function addTask(columnId, taskText = 'New Task', bgColor = 'white') {
             const column = document.getElementById(columnId);
             const card = document.createElement('div');
             card.className = 'card';
             card.draggable = 'true';
-            card.contentEditable = 'true'; 
-            card.innerText = 'New Task';
-            
-            attachDragEvents(card); 
+            card.contentEditable = 'true';
+            card.innerText = taskText;
+            card.style.backgroundColor = bgColor; 
+
+            card.addEventListener('blur', saveBoard); 
+
+            attachDragEvents(card);
             column.appendChild(card);
-            card.focus(); 
+
+            if (taskText === 'New Task') card.focus();
+            saveBoard();
         }
+
+        function saveBoard() {
+            const boardData = {
+                todo: [...document.getElementById('todo').children].map(c => ({ text: c.innerText, color: c.style.backgroundColor })),
+                doing: [...document.getElementById('doing').children].map(c => ({ text: c.innerText, color: c.style.backgroundColor })),
+                done: [...document.getElementById('done').children].map(c => ({ text: c.innerText, color: c.style.backgroundColor }))
+            };
+            localStorage.setItem('kanbanState', JSON.stringify(boardData));
+        }
+
+        function loadBoard() {
+            const saved = JSON.parse(localStorage.getItem('kanbanState'));
+            if (!saved) return; 
+
+            document.getElementById('todo').innerHTML = '';
+            document.getElementById('doing').innerHTML = '';
+            document.getElementById('done').innerHTML = '';
+
+            saved.todo.forEach(task => addTask('todo', task.text, task.color));
+            saved.doing.forEach(task => addTask('doing', task.text, task.color));
+            saved.done.forEach(task => addTask('done', task.text, task.color));
+        }
+
+        loadBoard();
 
     </script>
 </body>
