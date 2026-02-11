@@ -80,7 +80,22 @@
 
         .del-btn { opacity: 0; cursor: pointer; border: none; background: none; }
         .card:hover .del-btn { opacity: 1; color: #eb5a46; }
-
+        .trash-zone {
+            position: fixed;
+            bottom: -100px; 
+            left: 50%;
+            transform: translateX(-50%);
+            background: #eb5a46;
+            color: white;
+            padding: 20px 50px;
+            border-radius: 10px 10px 0 0;
+            font-weight: bold;
+            font-size: 1.2em;
+            transition: 0.3s;
+            z-index: 100;
+        }
+        .trash-zone.active { bottom: 0; }
+        .trash-zone.hovered { background: #c92a2a; padding: 30px 60px; }
     </style>
 </head>
 <body>
@@ -203,7 +218,34 @@
         }
 
         loadBoard();
+        const trashZone = document.getElementById('trash');
 
+        document.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('card')) trashZone.classList.add('active');
+        });
+
+        document.addEventListener('dragend', () => {
+            trashZone.classList.remove('active');
+            trashZone.classList.remove('hovered');
+        });
+
+        trashZone.addEventListener('dragover', e => {
+            e.preventDefault();
+            trashZone.classList.add('hovered');
+        });
+
+        trashZone.addEventListener('dragleave', () => {
+            trashZone.classList.remove('hovered');
+        });
+
+        trashZone.addEventListener('drop', e => {
+            const draggable = document.querySelector('.dragging');
+            if (draggable) {
+                draggable.remove();
+                saveBoard();
+            }
+        });
     </script>
+    <div id="trash" class="trash-zone">🗑️ Drop here to delete</div>
 </body>
 </html>
