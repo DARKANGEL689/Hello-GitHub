@@ -96,6 +96,14 @@
         }
         .trash-zone.active { bottom: 0; }
         .trash-zone.hovered { background: #c92a2a; padding: 30px 60px; }
+        .count {
+            background: rgba(9,30,66,.08);
+            font-size: 0.8em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            float: right;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -104,7 +112,7 @@
 
     <div class="board">
         <div class="column">
-            <h3>To Do 📌</h3>
+            <h3>To Do 📌 <span class="count" id="count-todo"></span></h3>
             <div class="task-list" id="todo">
                 <div class="card" draggable="true" contenteditable="true">Learn React</div>
                 <div class="card" draggable="true" contenteditable="true">Fix Bugs</div>
@@ -213,6 +221,7 @@
                 done: [...document.getElementById('done').children].map(c => ({ text: c.innerText, color: c.style.backgroundColor }))
             };
             localStorage.setItem('kanbanState', JSON.stringify(boardData));
+            updateCounters();
         }
 
         function loadBoard() {
@@ -256,6 +265,11 @@
                 saveBoard();
             }
         });
+        function updateCounters() {
+            document.getElementById('count-todo').innerText = document.getElementById('todo').children.length;
+            document.getElementById('count-doing').innerText = document.getElementById('doing').children.length;
+            document.getElementById('count-done').innerText = document.getElementById('done').children.length;
+        }
     </script>
     <div id="trash" class="trash-zone">🗑️ Drop here to delete</div>
 </body>
