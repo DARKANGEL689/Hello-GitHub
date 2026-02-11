@@ -134,6 +134,7 @@
                 <div class="card" draggable="true" contenteditable="true">Setup GitHub</div>
             </div>
             <button class="add-btn" onclick="addTask('done')">+ Add a card</button>
+            <button class="add-btn" onclick="clearDone()" style="color: #eb5a46; margin-top: 5px;">🧹 Clear Done</button>
         </div>
     </div>
 
@@ -269,6 +270,12 @@
             document.getElementById('count-todo').innerText = document.getElementById('todo').children.length;
             document.getElementById('count-doing').innerText = document.getElementById('doing').children.length;
             document.getElementById('count-done').innerText = document.getElementById('done').children.length;
+        }
+        function clearDone() {
+            if(confirm("Are you sure you want to permanently delete all completed tasks?")) {
+                document.getElementById('done').innerHTML = '';
+                saveBoard();
+            }
         }
     </script>
     <div id="trash" class="trash-zone">🗑️ Drop here to delete</div>
