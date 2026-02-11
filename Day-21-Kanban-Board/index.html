@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Day 21: Kanban Board</title>
+    <style>
+       body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #0079bf; 
+            display: flex;
+            flex-direction: column; 
+            align-items: center;    
+            padding-top: 30px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 { 
+            color: white; 
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3); 
+            margin-top: 0;
+            margin-bottom: 30px; 
+        }
+
+        .board {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .column {
+            background: #ebecf0;
+            width: 300px;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            max-height: 80vh;
+        }
+
+        .column h3 { margin: 5px 0 15px 10px; color: #172b4d; }
+
+        .task-list {
+            flex-grow: 1;
+            min-height: 100px;
+        }
+
+        .card {
+            background: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            box-shadow: 0 1px 0 rgba(9,30,66,.25);
+            cursor: grab;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card:active { cursor: grabbing; transform: rotate(2deg); }
+        .card:hover { background: #f4f5f7; }
+
+        .add-btn {
+            background: transparent;
+            border: none;
+            color: #5e6c84;
+            padding: 8px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-top: 10px;
+        }
+        .add-btn:hover { background: rgba(9,30,66,.08); color: #172b4d; }
+
+        .dragging {
+            opacity: 0.5;
+            background: #e2e4e9;
+        }
+
+        .del-btn { opacity: 0; cursor: pointer; border: none; background: none; }
+        .card:hover .del-btn { opacity: 1; color: #eb5a46; }
+
+    </style>
+</head>
+<body>
+
+    <h1>📋 Project Board</h1>
+
+    <div class="board">
+        <div class="column">
+            <h3>To Do 📌</h3>
+            <div class="task-list" id="todo">
+                <div class="card" draggable="true" contenteditable="true">Learn React</div>
+                <div class="card" draggable="true" contenteditable="true">Fix Bugs</div>
+            </div>
+            <button class="add-btn" onclick="addTask('todo')">+ Add a card</button>
+        </div>
+
+        <div class="column">
+            <h3>Doing 🔨</h3>
+            <div class="task-list" id="doing">
+                <div class="card" draggable="true" contenteditable="true">Day 21 Challenge</div>
+            </div>
+            <button class="add-btn" onclick="addTask('doing')">+ Add a card</button>
+        </div>
+
+        <div class="column">
+            <h3>Done ✅</h3>
+            <div class="task-list" id="done">
+                <div class="card" draggable="true" contenteditable="true">Setup GitHub</div>
+            </div>
+            <button class="add-btn" onclick="addTask('done')">+ Add a card</button>
+        </div>
+    </div>
+
+    <script>
+        const draggables = document.querySelectorAll('.card');
+        const containers = document.querySelectorAll('.task-list');
+
+        draggables.forEach(draggable => {
+            attachDragEvents(draggable);
+        });
+
+        function attachDragEvents(card) {
+            card.addEventListener('dragstart', () => {
+                card.classList.add('dragging');
+            });
+
+            card.addEventListener('dragend', () => {
+                card.classList.remove('dragging');
+            });
+        }
+
+        containers.forEach(container => {
+            container.addEventListener('dragover', e => {
+                e.preventDefault(); 
+                const afterElement = getDragAfterElement(container, e.clientY);
+                const draggable = document.querySelector('.dragging');
+                
+                if (afterElement == null) {
+                    container.appendChild(draggable);
+                } else {
+                    container.insertBefore(draggable, afterElement);
+                }
+            });
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.card:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function addTask(columnId) {
+            const column = document.getElementById(columnId);
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.draggable = 'true';
+            card.contentEditable = 'true'; 
+            card.innerText = 'New Task';
+            
+            attachDragEvents(card); 
+            column.appendChild(card);
+            card.focus(); 
+        }
+
+    </script>
+</body>
+</html>
