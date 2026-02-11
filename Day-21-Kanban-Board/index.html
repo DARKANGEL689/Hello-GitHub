@@ -146,6 +146,17 @@
                 card.classList.remove('dragging');
                 saveBoard(); 
             });
+            card.addEventListener('contextmenu', (e) => {
+                e.preventDefault(); 
+                const currentColor = card.style.backgroundColor || 'white';
+            
+                if (currentColor === 'white' || currentColor === '') card.style.backgroundColor = '#ffb8b8'; // Red
+                else if (currentColor === 'rgb(255, 184, 184)') card.style.backgroundColor = '#ffeaa7'; // Yellow
+                else if (currentColor === 'rgb(255, 234, 167)') card.style.backgroundColor = '#b8e994'; // Green
+                else card.style.backgroundColor = 'white';
+            
+                saveBoard();
+            });
         }
 
         containers.forEach(container => {
