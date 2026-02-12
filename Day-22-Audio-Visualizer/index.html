@@ -87,26 +87,29 @@
 
                 function animate() {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    
                     analyser.getByteFrequencyData(dataArray);
 
-                    const barWidth = (canvas.width / bufferLength) * 2.5;
-                    let barHeight;
-                    let x = 0;
+                    const centerX = canvas.width / 2;
+                    const centerY = canvas.height / 2;
+                    const radius = 150; 
 
                     for (let i = 0; i < bufferLength; i++) {
-                        barHeight = dataArray[i] * 2; 
-                        
-                        const red = 0;
-                        const green = barHeight + (10 * (i/bufferLength));
-                        const blue = 50;
+                        const barHeight = dataArray[i] * 1.5;
+                        const rads = (Math.PI * 2) / bufferLength;
+                        const x = centerX + Math.cos(rads * i) * (radius + barHeight);
+                        const y = centerY + Math.sin(rads * i) * (radius + barHeight);
+                        const x_end = centerX + Math.cos(rads * i) * radius;
+                        const y_end = centerY + Math.sin(rads * i) * radius;
 
-                        ctx.fillStyle = `rgb(${red},${green},${blue})`;
-                        ctx.fillRect(x, canvas.height - barHeight / 2, barWidth, barHeight);
+                        const hue = i * 2 + (Date.now() / 20); 
+                        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+                        ctx.lineWidth = 3;
 
-                        x += barWidth + 1;
+                        ctx.beginPath();
+                        ctx.moveTo(x_end, y_end);
+                        ctx.lineTo(x, y);
+                        ctx.stroke();
                     }
-
                     requestAnimationFrame(animate);
                 }
 
