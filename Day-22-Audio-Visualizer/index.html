@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Day 22: Audio Visualizer</title>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            filter: blur(1px) contrast(1.2);
+        }
+
+        #start-btn {
+            z-index: 10;
+            padding: 15px 40px;
+            font-size: 1.5em;
+            background: transparent;
+            color: #0f0;
+            border: 2px solid #0f0;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-shadow: 0 0 10px #0f0;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+
+        #start-btn:hover {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 50px #0f0;
+        }
+
+        h1 {
+            position: absolute;
+            top: 20px;
+            color: white;
+            z-index: 10;
+            font-weight: 300;
+            letter-spacing: 5px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🎤 MICROPHONE VISUALIZER</h1>
+    <button id="start-btn">START LISTENING</button>
+    <canvas id="visualizer"></canvas>
+
+    <script>
+        const btn = document.getElementById('start-btn');
+        const canvas = document.getElementById('visualizer');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        btn.addEventListener('click', async () => {
+            btn.style.display = 'none'; 
+            
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 256; 
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const source = audioCtx.createMediaStreamSource(stream);
+                source.connect(analyser); 
+                
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    analyser.getByteFrequencyData(dataArray);
+
+                    const barWidth = (canvas.width / bufferLength) * 2.5;
+                    let barHeight;
+                    let x = 0;
+
+                    for (let i = 0; i < bufferLength; i++) {
+                        barHeight = dataArray[i] * 2; 
+                        
+                        const red = 0;
+                        const green = barHeight + (10 * (i/bufferLength));
+                        const blue = 50;
+
+                        ctx.fillStyle = `rgb(${red},${green},${blue})`;
+                        ctx.fillRect(x, canvas.height - barHeight / 2, barWidth, barHeight);
+
+                        x += barWidth + 1;
+                    }
+
+                    requestAnimationFrame(animate);
+                }
+
+                animate();
+
+            } catch (err) {
+                console.error("Error accessing microphone:", err);
+                alert("Microphone access denied! Please allow permissions.");
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+    </script>
+</body>
+</html>
