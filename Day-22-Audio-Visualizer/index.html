@@ -88,6 +88,19 @@
                 function animate() {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     analyser.getByteFrequencyData(dataArray);
+                    let bass = 0;
+                    for (let i = 0; i < 10; i++) {
+                        bass += dataArray[i];
+                    }
+                    bass = bass / 10; 
+
+                    if (bass > 200) {
+                        const shakeX = Math.random() * 10 - 5;
+                        const shakeY = Math.random() * 10 - 5;
+                        canvas.style.transform = `translate(${shakeX}px, ${shakeY}px)`;
+                    } else {
+                        canvas.style.transform = `translate(0px, 0px)`;
+                    }
 
                     const centerX = canvas.width / 2;
                     const centerY = canvas.height / 2;
