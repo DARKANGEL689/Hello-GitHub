@@ -63,6 +63,11 @@
         <label>Sensitivity:</label>
         <input type="range" id="sensitivity" min="0.5" max="3" step="0.1" value="1.5">
     </div>
+    <select id="color-theme" style="position: absolute; top: 150px; z-index: 20;">
+        <option value="rainbow">Rainbow</option>
+        <option value="fire">Fire (Red/Yellow)</option>
+        <option value="ice">Ice (Blue/Cyan)</option>
+    </select>
     <button id="start-btn">START LISTENING</button>
     <button id="mode-btn" style="position: absolute; top: 120px; z-index: 20; cursor: pointer;">Change Mode</button>
     <canvas id="visualizer"></canvas>
@@ -76,11 +81,11 @@
         canvas.height = window.innerHeight;
         let visualMode = 'circle';
         
-            document.getElementById('mode-btn').addEventListener('click', () => {
-                visualMode = visualMode === 'circle' ? 'bars' : 'circle';
-                document.getElementById('mode-btn').innerText = 
-                visualMode === 'circle' ? 'Switch to Bars' : 'Switch to Circle';
-            });
+        document.getElementById('mode-btn').addEventListener('click', () => {
+            visualMode = visualMode === 'circle' ? 'bars' : 'circle';
+            document.getElementById('mode-btn').innerText = 
+            visualMode === 'circle' ? 'Switch to Bars' : 'Switch to Circle';
+        });
         btn.addEventListener('click', async () => {
             btn.style.display = 'none'; 
             
@@ -126,8 +131,20 @@
                     const radius = 150; 
 
                     for (let i = 0; i < bufferLength; i++) {
-                       const sensitivity = sensSlider.value;
+                        const sensitivity = sensSlider.value;
                         const barHeight = dataArray[i] * sensitivity;
+
+                        const theme = document.getElementById('color-theme').value;
+                        let color;
+
+                        if (theme === 'fire') {
+                            color = `rgb(${barHeight + 100}, ${barHeight * 2}, 0)`;
+                        } else if (theme === 'ice') {
+                            color = `rgb(0, ${barHeight * 2}, 255)`;
+                        } else {
+                            const hue = i * 2 + (Date.now() / 20);
+                            color = `hsl(${hue}, 100%, 50%)`;
+                        }
 
                         if (visualMode === 'circle') {
                             const centerX = canvas.width / 2;
@@ -140,8 +157,7 @@
                             const x_end = centerX + Math.cos(rads * i) * radius;
                             const y_end = centerY + Math.sin(rads * i) * radius;
 
-                            const hue = i * 2 + (Date.now() / 20);
-                            ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+                            ctx.strokeStyle = color; 
                             ctx.lineWidth = 3;
                             
                             ctx.beginPath();
@@ -153,13 +169,9 @@
                             const barWidth = (canvas.width / bufferLength) * 2.5;
                             const x = i * (barWidth + 1);
                             
-                            const r = barHeight + (25 * (i/bufferLength));
-                            const g = 250 * (i/bufferLength);
-                            const b = 50;
-
-                            ctx.fillStyle = `rgb(${r},${g},${b})`;
+                            ctx.fillStyle = color; 
                             ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-                        } 
+                        }
                     }
                     requestAnimationFrame(animate);
                 }
