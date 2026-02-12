@@ -64,6 +64,7 @@
         <input type="range" id="sensitivity" min="0.5" max="3" step="0.1" value="1.5">
     </div>
     <button id="start-btn">START LISTENING</button>
+    <button id="mode-btn" style="position: absolute; top: 120px; z-index: 20; cursor: pointer;">Change Mode</button>
     <canvas id="visualizer"></canvas>
 
     <script>
@@ -73,7 +74,13 @@
         const sensSlider = document.getElementById('sensitivity');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
+        let visualMode = 'circle';
+        
+            document.getElementById('mode-btn').addEventListener('click', () => {
+                visualMode = visualMode === 'circle' ? 'bars' : 'circle';
+                document.getElementById('mode-btn').innerText = 
+                visualMode === 'circle' ? 'Switch to Bars' : 'Switch to Circle';
+            });
         btn.addEventListener('click', async () => {
             btn.style.display = 'none'; 
             
@@ -111,22 +118,40 @@
                     const radius = 150; 
 
                     for (let i = 0; i < bufferLength; i++) {
-                        const sensitivity = sensSlider.value;
+                       const sensitivity = sensSlider.value;
                         const barHeight = dataArray[i] * sensitivity;
-                        const rads = (Math.PI * 2) / bufferLength;
-                        const x = centerX + Math.cos(rads * i) * (radius + barHeight);
-                        const y = centerY + Math.sin(rads * i) * (radius + barHeight);
-                        const x_end = centerX + Math.cos(rads * i) * radius;
-                        const y_end = centerY + Math.sin(rads * i) * radius;
 
-                        const hue = i * 2 + (Date.now() / 20); 
-                        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
-                        ctx.lineWidth = 3;
+                        if (visualMode === 'circle') {
+                            const centerX = canvas.width / 2;
+                            const centerY = canvas.height / 2;
+                            const radius = 150; 
+                            
+                            const rads = (Math.PI * 2) / bufferLength;
+                            const x = centerX + Math.cos(rads * i) * (radius + barHeight);
+                            const y = centerY + Math.sin(rads * i) * (radius + barHeight);
+                            const x_end = centerX + Math.cos(rads * i) * radius;
+                            const y_end = centerY + Math.sin(rads * i) * radius;
 
-                        ctx.beginPath();
-                        ctx.moveTo(x_end, y_end);
-                        ctx.lineTo(x, y);
-                        ctx.stroke();
+                            const hue = i * 2 + (Date.now() / 20);
+                            ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+                            ctx.lineWidth = 3;
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(x_end, y_end);
+                            ctx.lineTo(x, y);
+                            ctx.stroke();
+
+                        } else {
+                            const barWidth = (canvas.width / bufferLength) * 2.5;
+                            const x = i * (barWidth + 1);
+                            
+                            const r = barHeight + (25 * (i/bufferLength));
+                            const g = 250 * (i/bufferLength);
+                            const b = 50;
+
+                            ctx.fillStyle = `rgb(${r},${g},${b})`;
+                            ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                        } 
                     }
                     requestAnimationFrame(animate);
                 }
