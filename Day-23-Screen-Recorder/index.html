@@ -178,11 +178,14 @@
         });
 
         function startRecordingUI() {
-            startBtn.style.display = "none";
+           startBtn.style.display = "none";
             stopBtn.style.display = "flex";
             indicator.style.display = "block";
-            pauseBtn.style.display = "flex";
+            snapBtn.style.display = "flex"; 
+            pauseBtn.style.display = "flex"; 
             startTimer()
+            document.title = "🔴 Recording... | Screen Recorder";
+            
         }
 
         function stopRecordingUI() {
@@ -192,7 +195,10 @@
             preview.style.display = "none";
             placeholder.style.display = "block";
             pauseBtn.style.display = "none";
-            stopTimer()
+            snapBtn.style.display = "none";
+            stopTimer(); 
+            
+            document.title = "Day 23: Screen Recorder";
         }
 
         function saveFile() {
