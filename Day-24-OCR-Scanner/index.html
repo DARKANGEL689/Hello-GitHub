@@ -127,6 +127,7 @@
             <button id="scan-btn">🔍 Scan Text</button>
             
             <div id="status-text">Ready</div>
+            <div id="confidence-text" style="font-size: 0.9em; color: #00d2ff; margin-top: 5px; display: none;">Confidence: 0%</div>
             <div class="progress-container">
                 <div class="progress-bar" id="progress"></div>
             </div>
@@ -182,8 +183,12 @@
                         }
                     }
                 }
-            ).then(({ data: { text } }) => {
+            ).then(({ data: { text, confidence } }) => {
                 resultBox.value = text;
+                const confPercent = confidence.toFixed(1);
+                const confEl = document.getElementById('confidence-text');
+                confEl.innerText = `Confidence: ${confPercent}%`;
+                confEl.style.display = 'block';
                 statusText.innerText = "✅ Scan Complete!";
                 scanBtn.disabled = false;
                 scanBtn.innerText = "🔍 Scan Text";
