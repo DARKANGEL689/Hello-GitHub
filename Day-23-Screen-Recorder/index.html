@@ -99,8 +99,11 @@
         <button id="pauseBtn" style="background: #f1c40f; display: none; color: black;">⏸ Pause</button>
         <button id="snapBtn" style="background: #9b59b6; display: none;">📸 Snap</button>
         <span id="timer" style="font-family: monospace; font-size: 1.2rem; display: none;">00:00</span>
+      <select id="format-select" style="padding: 10px; border-radius: 5px; margin-right: 10px;">
+        <option value="video/webm">WebM (Default)</option>
+        <option value="video/mp4">MP4 (Experimental)</option>
+      </select>
     </div>
-
     <script>
         const startBtn = document.getElementById('startBtn');
         const stopBtn = document.getElementById('stopBtn');
@@ -144,8 +147,15 @@
                 preview.srcObject = screenStream;
                 preview.play(); 
 
-                mediaRecorder = new MediaRecorder(combinedStream);
-
+                const format = document.getElementById('format-select').value;
+                const options = { mimeType: format };
+            
+                try {
+                    mediaRecorder = new MediaRecorder(combinedStream, options);
+                } catch (e) {
+                    console.warn("Format not supported, falling back to default");
+                    mediaRecorder = new MediaRecorder(combinedStream);
+                }
                 mediaRecorder.ondataavailable = (e) => {
                     if (e.data.size > 0) recordedChunks.push(e.data);
                 };
