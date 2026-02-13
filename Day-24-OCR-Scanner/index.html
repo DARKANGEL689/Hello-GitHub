@@ -137,6 +137,7 @@
             <h3>2. Extracted Text</h3>
             <button id="copy-btn" style="padding: 5px 15px; font-size: 0.9rem; margin-bottom: 10px; background: #444; border: 1px solid #666;">📋 Copy Text</button>
             <button id="speak-btn" style="padding: 5px 15px; font-size: 0.9rem; margin-bottom: 10px; margin-left: 5px; background: #444; border: 1px solid #666;">🗣️ Speak</button>
+            <button id="download-btn" style="padding: 5px 15px; font-size: 0.9rem; margin-bottom: 10px; margin-left: 5px; background: #444; border: 1px solid #666;">💾 Save .txt</button>
             <textarea id="result-box" placeholder="Text will appear here..."></textarea>
         </div>
     </div>
@@ -258,6 +259,20 @@
                 speechSynthesis.speak(utterance);
             } else {
                 alert("No text to speak!");
+            }
+        });
+        document.getElementById('download-btn').addEventListener('click', () => {
+            const text = resultBox.value;
+            if (text) {
+                const blob = new Blob([text], { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'scanned-text.txt';
+                link.click();
+                
+                URL.revokeObjectURL(link.href);
+            } else {
+                alert("No text to save!");
             }
         });
     </script>
