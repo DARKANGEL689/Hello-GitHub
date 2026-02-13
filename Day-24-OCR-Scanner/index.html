@@ -116,6 +116,12 @@
     <div class="container">
         <div class="box" id="drop-zone"></div>
             <h3>1. Upload Image</h3>
+            <select id="lang-select" style="padding: 8px; margin-bottom: 15px; border-radius: 5px; background: #333; color: white; border: 1px solid #555;">
+                <option value="eng">🇺🇸 English</option>
+                <option value="spa">🇪🇸 Spanish</option>
+                <option value="fra">🇫🇷 French</option>
+                <option value="deu">🇩🇪 German</option>
+            </select>
             <input type="file" id="uploader" accept="image/*">
             <img id="image-preview" alt="Preview">
             <button id="scan-btn">🔍 Scan Text</button>
@@ -161,10 +167,10 @@
             progressContainer.style.display = "block";
             scanBtn.disabled = true;
             scanBtn.innerText = "⏳ Scanning...";
-
+            const lang = document.getElementById('lang-select').value;
             Tesseract.recognize(
                 file,
-                'eng', 
+                lang, 
                 {
                     logger: m => {
                         if (m.status === 'recognizing text') {
