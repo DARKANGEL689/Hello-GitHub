@@ -102,8 +102,11 @@
         }
         
         #status-text { margin-top: 10px; font-size: 0.9em; color: #aaa; }
-
-    </style>
+        .box.drag-over {
+            border: 2px dashed #00d2ff;
+            background: #222;
+        }
+</style>
 </head>
 <body>
 
@@ -111,7 +114,7 @@
     <p>Upload an image containing text, and AI will extract it.</p>
 
     <div class="container">
-        <div class="box">
+        <div class="box" id="drop-zone"></div>
             <h3>1. Upload Image</h3>
             <input type="file" id="uploader" accept="image/*">
             <img id="image-preview" alt="Preview">
@@ -183,6 +186,27 @@
                 statusText.innerText = "❌ Error occurred.";
                 scanBtn.disabled = false;
             });
+        });
+        const dropZone = document.getElementById('drop-zone');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault(); 
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            
+            if (e.dataTransfer.files.length > 0) {
+                uploader.files = e.dataTransfer.files;
+                const event = new Event('change');
+                uploader.dispatchEvent(event);
+            }
         });
     </script>
 
