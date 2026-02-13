@@ -96,6 +96,7 @@
         <div class="recording-indicator" id="indicator"></div>
         <button id="startBtn">🚀 Start Recording</button>
         <button id="stopBtn">⏹ Stop & Save</button>
+        <span id="timer" style="font-family: monospace; font-size: 1.2rem; display: none;">00:00</span>
     </div>
 
     <script>
@@ -166,6 +167,7 @@
             startBtn.style.display = "none";
             stopBtn.style.display = "flex";
             indicator.style.display = "block";
+            startTimer()
         }
 
         function stopRecordingUI() {
@@ -174,6 +176,7 @@
             indicator.style.display = "none";
             preview.style.display = "none";
             placeholder.style.display = "block";
+            stopTimer()
         }
 
         function saveFile() {
@@ -189,6 +192,26 @@
             
             window.URL.revokeObjectURL(url);
             recordedChunks = []; 
+        }
+        let timerInterval;
+        let seconds = 0;
+
+        function startTimer() {
+            seconds = 0;
+            document.getElementById('timer').style.display = 'block';
+            document.getElementById('timer').innerText = '00:00';
+
+            timerInterval = setInterval(() => {
+                seconds++;
+                const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('timer').innerText = `${m}:${s}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('timer').style.display = 'none';
         }
     </script>
 </body>
