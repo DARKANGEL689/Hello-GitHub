@@ -96,6 +96,7 @@
         <div class="recording-indicator" id="indicator"></div>
         <button id="startBtn">🚀 Start Recording</button>
         <button id="stopBtn">⏹ Stop & Save</button>
+        <button id="pauseBtn" style="background: #f1c40f; display: none; color: black;">⏸ Pause</button>
         <span id="timer" style="font-family: monospace; font-size: 1.2rem; display: none;">00:00</span>
     </div>
 
@@ -167,6 +168,7 @@
             startBtn.style.display = "none";
             stopBtn.style.display = "flex";
             indicator.style.display = "block";
+            pauseBtn.style.display = "flex";
             startTimer()
         }
 
@@ -176,6 +178,7 @@
             indicator.style.display = "none";
             preview.style.display = "none";
             placeholder.style.display = "block";
+            pauseBtn.style.display = "none";
             stopTimer()
         }
 
@@ -213,6 +216,21 @@
             clearInterval(timerInterval);
             document.getElementById('timer').style.display = 'none';
         }
+        const pauseBtn = document.getElementById('pauseBtn');
+
+        pauseBtn.addEventListener('click', () => {
+            if (mediaRecorder.state === "recording") {
+                mediaRecorder.pause();
+                pauseBtn.innerText = "▶ Resume";
+                pauseBtn.style.background = "#2ecc71"; 
+                clearInterval(timerInterval); 
+            } else if (mediaRecorder.state === "paused") {
+                mediaRecorder.resume();
+                pauseBtn.innerText = "⏸ Pause";
+                pauseBtn.style.background = "#f1c40f"; 
+                startTimer(true); 
+            }
+        }); 
     </script>
 </body>
 </html>
