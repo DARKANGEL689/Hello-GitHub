@@ -135,6 +135,7 @@
 
         <div class="box">
             <h3>2. Extracted Text</h3>
+            <button id="copy-btn" style="padding: 5px 15px; font-size: 0.9rem; margin-bottom: 10px; background: #444; border: 1px solid #666;">📋 Copy Text</button>
             <textarea id="result-box" placeholder="Text will appear here..."></textarea>
         </div>
     </div>
@@ -233,6 +234,20 @@
                     const event = new Event('change');
                     uploader.dispatchEvent(event);
                 }
+            }
+        });
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            const text = resultBox.value;
+            if (text) {
+                navigator.clipboard.writeText(text);
+                
+                const originalText = document.getElementById('copy-btn').innerText;
+                document.getElementById('copy-btn').innerText = "✅ Copied!";
+                setTimeout(() => {
+                    document.getElementById('copy-btn').innerText = originalText;
+                }, 2000);
+            } else {
+                alert("No text to copy!");
             }
         });
     </script>
