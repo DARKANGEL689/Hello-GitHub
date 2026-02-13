@@ -88,6 +88,9 @@
         <video id="preview" autoplay muted></video>
         <div id="placeholder" style="color: #555;">Preview will appear here</div>
     </div>
+    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+        <input type="checkbox" id="mic-toggle"> 🎙️ Mic
+    </label>
 
     <div class="controls">
         <div class="recording-indicator" id="indicator"></div>
@@ -107,37 +110,50 @@
 
         startBtn.addEventListener('click', async () => {
             try {
-                const stream = await navigator.mediaDevices.getDisplayMedia({ 
+                const screenStream = await navigator.mediaDevices.getDisplayMedia({
                     video: { mediaSource: "screen" },
-                    audio: true 
+                    audio: true
                 });
 
-                preview.srcObject = stream;
-                preview.style.display = "block";
-                placeholder.style.display = "none";
-                
-                mediaRecorder = new MediaRecorder(stream);
+                const micOn = document.getElementById('mic-toggle').checked;
+                let combinedStream = screenStream;
 
-                mediaRecorder.ondataavailable = (event) => {
-                    if (event.data.size > 0) {
-                        recordedChunks.push(event.data);
+                if (micOn) {
+                    const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                    const audioCtx = new AudioContext();
+                    const dest = audioCtx.createMediaStreamDestination();
+
+                    const micSource = audioCtx.createMediaStreamSource(micStream);
+                    micSource.connect(dest);
+
+                    if (screenStream.getAudioTracks().length > 0) {
+                        const sysSource = audioCtx.createMediaStreamSource(screenStream);
+                        sysSource.connect(dest);
                     }
+
+                    combinedStream = new MediaStream([
+                        ...screenStream.getVideoTracks(),
+                        ...dest.stream.getAudioTracks()
+                    ]);
+                }
+
+                preview.srcObject = screenStream;
+                preview.play(); 
+
+                mediaRecorder = new MediaRecorder(combinedStream);
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) recordedChunks.push(e.data);
                 };
 
-                mediaRecorder.onstop = () => {
-                    stopRecordingUI();
-                    saveFile();
-                };
+                mediaRecorder.onstop = saveFile;
 
                 mediaRecorder.start();
                 startRecordingUI();
 
-                stream.getVideoTracks()[0].onended = () => {
-                    stopBtn.click();
-                };
-
             } catch (err) {
-                console.error("Error: " + err);
+                console.error("Error:", err);
             }
         });
 
