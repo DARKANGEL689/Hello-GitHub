@@ -97,6 +97,7 @@
         <button id="startBtn">🚀 Start Recording</button>
         <button id="stopBtn">⏹ Stop & Save</button>
         <button id="pauseBtn" style="background: #f1c40f; display: none; color: black;">⏸ Pause</button>
+        <button id="snapBtn" style="background: #9b59b6; display: none;">📸 Snap</button>
         <span id="timer" style="font-family: monospace; font-size: 1.2rem; display: none;">00:00</span>
     </div>
 
@@ -231,6 +232,23 @@
                 startTimer(true); 
             }
         }); 
+        const snapBtn = document.getElementById('snapBtn');
+
+        startBtn.addEventListener('click', () => snapBtn.style.display = 'flex');
+
+        snapBtn.addEventListener('click', () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = preview.videoWidth;
+            canvas.height = preview.videoHeight;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(preview, 0, 0, canvas.width, canvas.height);
+
+            const link = document.createElement('a');
+            link.download = `screenshot_${Date.now()}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        });
     </script>
 </body>
 </html>
