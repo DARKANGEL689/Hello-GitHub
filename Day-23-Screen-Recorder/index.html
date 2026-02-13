@@ -103,6 +103,8 @@
         <option value="video/webm">WebM (Default)</option>
         <option value="video/mp4">MP4 (Experimental)</option>
       </select>
+      <input type="text" id="filename-input" placeholder="File Name (Optional)" 
+            style="padding: 10px; border-radius: 5px; border: none; outline: none;">
     </div>
     <script>
         const startBtn = document.getElementById('startBtn');
@@ -194,13 +196,17 @@
         }
 
         function saveFile() {
-            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+           const blob = new Blob(recordedChunks, { type: 'video/webm' });
             const url = URL.createObjectURL(blob);
             
+            const nameInput = document.getElementById('filename-input').value.trim();
+            const timestamp = new Date().toISOString().slice(0,19).replace(/:/g, "-");
+            const filename = nameInput ? `${nameInput}.webm` : `Screen_Rec_${timestamp}.webm`;
+
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
-            a.download = 'screen-recording.webm';
+            a.download = filename;
             document.body.appendChild(a);
             a.click();
             
