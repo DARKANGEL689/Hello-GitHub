@@ -208,6 +208,22 @@
                 uploader.dispatchEvent(event);
             }
         });
+        document.addEventListener('paste', (e) => {
+            const items = e.clipboardData.items;
+            
+            for (let item of items) {
+                if (item.type.indexOf("image") !== -1) {
+                    const file = item.getAsFile();
+                    
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    uploader.files = dataTransfer.files;
+
+                    const event = new Event('change');
+                    uploader.dispatchEvent(event);
+                }
+            }
+        });
     </script>
 
 </body>
