@@ -106,10 +106,30 @@
             border: 2px dashed #00d2ff;
             background: #222;
         }
+        body.love-mode {
+            background: #2a0a10; 
+        }
+        body.love-mode h1 {
+            color: #ff6b81;
+            text-shadow: 0 0 15px #ff6b81;
+        }
+        body.love-mode button {
+            background: #ff4757;
+            color: white;
+            box-shadow: 0 0 10px #ff4757;
+        }
+        body.love-mode .box {
+            border: 1px solid #ff6b81;
+            box-shadow: 0 0 20px rgba(255, 107, 129, 0.2);
+        }
+        body.love-mode textarea {
+            color: #ffb8c6;
+            border-color: #ff6b81;
+        }
 </style>
 </head>
 <body>
-
+    <button id="love-btn" style="position: fixed; top: 20px; right: 20px; background: transparent; font-size: 2rem; border: none; cursor: pointer; z-index: 100;">❤️</button>
     <h1>📄 OCR Scanner (Image to Text)</h1>
     <p>Upload an image containing text, and AI will extract it.</p>
 
@@ -341,7 +361,9 @@
                 updateStats(); 
             }
         });
-
+        document.getElementById('love-btn').addEventListener('click', () => {
+            document.body.classList.toggle('love-mode');
+        });
         
     </script>
 
