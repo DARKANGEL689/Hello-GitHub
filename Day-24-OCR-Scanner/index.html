@@ -329,6 +329,20 @@
             const size = fontSlider.value;
             resultBox.style.fontSize = size + "px";
         });
+        
+        resultBox.addEventListener('input', () => {
+            localStorage.setItem('ocr_text', resultBox.value);
+        });
+
+        window.addEventListener('load', () => {
+            const savedText = localStorage.getItem('ocr_text');
+            if (savedText) {
+                resultBox.value = savedText;
+                updateStats(); 
+            }
+        });
+
+        
     </script>
 
 </body>
