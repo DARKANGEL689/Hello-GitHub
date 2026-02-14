@@ -126,6 +126,25 @@
             color: #ffb8c6;
             border-color: #ff6b81;
         }
+        .spinner {
+            border: 4px solid #333;
+            border-top: 4px solid #00d2ff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: none; 
+            margin: 15px auto;
+        }
+
+        body.love-mode .spinner {
+            border-top: 4px solid #ff6b81;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 </style>
 </head>
 <body>
@@ -149,6 +168,7 @@
             <div id="status-text">Ready</div>
             <div id="confidence-text" style="font-size: 0.9em; color: #00d2ff; margin-top: 5px; display: none;">Confidence: 0%</div>
             <div class="progress-container">
+                <div class="spinner" id="spinner"></div>
                 <div class="progress-bar" id="progress"></div>
             </div>
         </div>
@@ -196,6 +216,7 @@
 
             resultBox.value = "";
             progressContainer.style.display = "block";
+            document.getElementById('spinner').style.display = 'block';
             scanBtn.disabled = true;
             scanBtn.innerText = "⏳ Scanning...";
             const lang = document.getElementById('lang-select').value;
@@ -220,11 +241,13 @@
                 const confEl = document.getElementById('confidence-text');
                 confEl.innerText = `Confidence: ${confPercent}%`;
                 confEl.style.display = 'block';
+                document.getElementById('spinner').style.display = 'none';
                 statusText.innerText = "✅ Scan Complete!";
                 scanBtn.disabled = false;
                 scanBtn.innerText = "🔍 Scan Text";
             }).catch(err => {
                 console.error(err);
+                document.getElementById('spinner').style.display = 'none';
                 statusText.innerText = "❌ Error occurred.";
                 scanBtn.disabled = false;
             });
