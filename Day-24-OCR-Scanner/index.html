@@ -139,6 +139,7 @@
             <button id="speak-btn" style="padding: 5px 15px; font-size: 0.9rem; margin-bottom: 10px; margin-left: 5px; background: #444; border: 1px solid #666;">🗣️ Speak</button>
             <button id="download-btn" style="padding: 5px 15px; font-size: 0.9rem; margin-bottom: 10px; margin-left: 5px; background: #444; border: 1px solid #666;">💾 Save .txt</button>
             <button id="clear-btn" style="padding: 5px 15px; font-size: 0.9rem; margin-bottom: 10px; margin-left: 5px; background: #ff4757; border: none;">🗑️ Clear</button>
+            <input type="text" id="search-box" placeholder="🔍 Find text..." style="width: 100%; padding: 8px; margin-bottom: 10px; background: #222; border: 1px solid #444; color: white; border-radius: 5px;">
             <textarea id="result-box" placeholder="Text will appear here..."></textarea>
             <div id="stats" style="color: #666; font-size: 0.9rem; margin-top: 5px;">Words: 0 | Characters: 0</div>
         </div>
@@ -302,6 +303,21 @@
             progressBar.style.width = "0%";
             document.getElementById('status-text').innerText = "Ready";
             document.getElementById('confidence-text').style.display = "none";
+        });
+        
+        
+        const searchBox = document.getElementById('search-box');
+
+        searchBox.addEventListener('input', () => {
+            const searchText = searchBox.value;
+            const content = resultBox.value;
+
+            if (searchText && content.includes(searchText)) {
+                const index = content.indexOf(searchText);
+                
+                resultBox.focus();
+                resultBox.setSelectionRange(index, index + searchText.length);
+            }
         });
     </script>
 
